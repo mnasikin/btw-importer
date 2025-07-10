@@ -1,4 +1,4 @@
-[![Download Plugin](https://img.shields.io/badge/download_plugin-000?style=for-the-badge&logo=download&logoColor=white)](https://nasikin.web.id/download/btw-importer-v1.1.0.zip)
+[![Download Plugin](https://img.shields.io/badge/download_plugin-000?style=for-the-badge&logo=download&logoColor=white)](https://github.com/mnasikin/btw-importer/archive/refs/heads/v1.1.0.zip)
 
 # BtW Importer
 
