@@ -3,7 +3,7 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.1  
 Tested up to: 6.8  
-Stable tag: 2.1.2  
+Stable tag: 2.1.3  
 Requires PHP: 7.4  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -63,6 +63,10 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+= 2.1.3 =
+* Security improvement to comply with wordpress standard
+* Performance optimization
+
 = 2.1.2 =
 * Skip comment so the comment not imported instead imported as post
 

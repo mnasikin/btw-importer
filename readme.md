@@ -33,7 +33,7 @@ Make sure to check your content after you import contents. Also, this plugin doe
 - PHP `7.4` or later  
 - `cURL` PHP extension  
 - `allow_url_fopen` enabled 
-- `SimpleXML` PHP Extension 
+- `SimpleXML`/`XML` PHP Extension 
 - Writable `wp-content/uploads` folder (default configuration meets this)
 
 ## 📦 Installation

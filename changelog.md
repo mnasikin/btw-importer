@@ -7,6 +7,10 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 ## 🧾 Changelog
 
+### 2.1.3
+- Security improvement to comply with wordpress standard
+- Performance optimization
+
 ### 2.1.2
 - Skip comment so the comment not imported instead imported as post
 

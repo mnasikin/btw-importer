@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class BTW_Importer {
+class btw_importer_Importer {
     private $downloaded_images = []; // cache
 
     public function __construct() {
@@ -20,8 +20,8 @@ class BTW_Importer {
 
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
-        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '1.2.2', true);
-        wp_localize_script('btw-importer', 'btwImporter', [
+        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '2.1.3', true);
+        wp_localize_script('btw-importer', 'btw_importer', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('btw_importer_nonce')
         ]);
@@ -59,19 +59,37 @@ class BTW_Importer {
 
     public function ajax_prepare_import() {
         check_ajax_referer('btw_importer_nonce', 'nonce');
-        $atom_content = isset($_POST['atom_content']) ? wp_unslash($_POST['atom_content']) : '';
+
+        $atom_content = filter_input(INPUT_POST, 'atom_content', FILTER_UNSAFE_RAW);
+        $atom_content = null === $atom_content ? '' : wp_unslash($atom_content);
+
+        // Remove BOM and control characters
+        $atom_content = preg_replace('/^\x{FEFF}/u', '', $atom_content);
+        $atom_content = preg_replace('/[^\P{C}\n\r\t]+/u', '', $atom_content);
+
         if (!$atom_content) wp_send_json_error('No data received.');
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($atom_content);
-        if (!$xml) wp_send_json_error('Failed to parse XML.');
+        if (!$xml) {
+            $errors = libxml_get_errors();
+            $messages = array_map(function($e){ return trim($e->message); }, $errors);
+            libxml_clear_errors();
+            wp_send_json_error('XML parse errors: ' . implode('; ', $messages));
+        }
+
+        $namespaces = $xml->getNamespaces(true);
+        $entries = $xml->entry;
+        if (empty($entries) && isset($namespaces['atom'])) {
+            $xml->registerXPathNamespace('a', $namespaces['atom']);
+            $entries = $xml->xpath('//a:entry');
+        }
 
         $posts = [];
-        foreach ($xml->entry as $entry) {
+        foreach ($entries as $entry) {
             $bloggerType = strtolower((string)$entry->children('blogger', true)->type);
-            //$post_type = ($bloggerType === 'page') ? 'page' : 'post';
             $post_type = $bloggerType;
-            if($post_type == 'page' || $post_type == 'post') {
+            if ($post_type == 'page' || $post_type == 'post') {
                 $title = sanitize_text_field((string)$entry->title);
                 $content = (string)$entry->content;
                 $author = isset($entry->author->name) ? sanitize_text_field((string)$entry->author->name) : '';
@@ -80,7 +98,6 @@ class BTW_Importer {
                 $date_gmt = gmdate('Y-m-d H:i:s', strtotime($published_raw));
                 $date_local = get_date_from_gmt($date_gmt, 'Y-m-d H:i:s');
 
-                // get categories
                 $categories = [];
                 foreach ($entry->category as $cat) {
                     $term = (string)$cat['term'];
@@ -89,16 +106,13 @@ class BTW_Importer {
                     }
                 }
 
-                // get old permalink from <blogger:filename>
                 $filename = (string)$entry->children('blogger', true)->filename;
                 $filename = trim($filename);
 
-                // get blogger post status from <blogger:status>
                 $status_raw = strtolower((string)$entry->children('blogger', true)->status);
-                $status = 'publish'; // default
+                $status = 'publish';
                 if ($status_raw === 'draft') $status = 'draft';
                 elseif ($status_raw === 'deleted') $status = 'trash';
-
 
                 $posts[] = [
                     'title'      => $title,
@@ -111,8 +125,6 @@ class BTW_Importer {
                     'filename'   => $filename,
                     'status'     => $status
                 ];
-            } else {
-                // presumably a comment. Skip for now
             }
         }
 
@@ -121,7 +133,8 @@ class BTW_Importer {
 
     public function ajax_import_single_post() {
         check_ajax_referer('btw_importer_nonce', 'nonce');
-        $raw_post = isset($_POST['post']) ? $_POST['post'] : [];
+        $raw_post = filter_input(INPUT_POST, 'post', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $raw_post = is_array($raw_post) ? array_map('wp_unslash', $raw_post) : [];
         if (!$raw_post) wp_send_json_error('Missing post data.');
 
         $title = sanitize_text_field($raw_post['title'] ?? '');
@@ -195,18 +208,18 @@ class BTW_Importer {
             if (preg_match('#/s\d+/(.+)$#', $img_url, $m)) {
                 $basename = $m[1];
             } else {
-                $basename = basename(parse_url($img_url, PHP_URL_PATH));
+                $basename = basename(wp_parse_url($img_url, PHP_URL_PATH));
             }
 
             if (!isset($image_by_basename[$basename])) {
                 $image_by_basename[$basename] = $img_url;
             } else {
                 // prefer bigger /sXXX/ number
-                if (preg_match('#/s(\d+)/#', $img_url, $m1) && preg_match('#/s(\d+)/#', $image_by_basename[$basename], $m2)) {
-                    if ((int)$m1[1] > (int)$m2[1]) {
-                        $image_by_basename[$basename] = $img_url;
-                    }
+            if (preg_match('#/s(\d+)/#', $img_url, $m1) && preg_match('#/s(\d+)/#', $image_by_basename[$basename], $m2)) {
+                if ((int)$m1[1] > (int)$m2[1]) {
+                    $image_by_basename[$basename] = $img_url;
                 }
+            }
             }
         }
 
@@ -223,7 +236,7 @@ class BTW_Importer {
             $tmp = download_url($img_url);
             if (is_wp_error($tmp)) { $msgs[]='⚠ Failed to download'; continue; }
 
-            $file = ['name'=>basename(parse_url($img_url, PHP_URL_PATH)),'tmp_name'=>$tmp];
+            $file = ['name'=>basename(wp_parse_url($img_url, PHP_URL_PATH)),'tmp_name'=>$tmp];
             $media_id = media_handle_sideload($file,$post_id);
             if (is_wp_error($media_id)) { wp_delete_file($tmp); $msgs[]='⚠ Failed to attach'; continue; }
 
@@ -248,4 +261,4 @@ class BTW_Importer {
     }
 }
 
-new BTW_Importer();
+new btw_importer_Importer();
