@@ -21,7 +21,7 @@ function btw_importer_handle_old_permalink_redirect() {
     }
 
     // Match Blogger old permalink: /YYYY/MM/slug.html
-    if (preg_match('#/\d{4}/\d{2}/.+\.html$#', $current_path)) {
+    if (preg_match('#(/\\d{4}/\\d{2}/.+\\.html$|/p/.+\\.html$)#', $current_path)) {
         $query = new WP_Query([
             'post_type'  => ['post', 'page'],
             'meta_query' => [

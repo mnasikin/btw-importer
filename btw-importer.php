@@ -3,7 +3,7 @@
 Plugin Name:        BtW Importer
 Plugin URI:         https://github.com/mnasikin/btw-importer
 Description:        Simple yet powerful plugin to Migrate Blogger to WordPress in one click. Import .atom from Google Takeout and the plugin will scan & download first image, replace URLs, set featured image, show live progress.
-Version:            2.1.3
+Version:            2.1.4
 Author:             Nasikin
 Author URI:         https://github.com/mnasikin/
 License:            MIT
@@ -32,6 +32,9 @@ $myUpdateChecker->getVcsApi()->enableReleaseAssets();
 $myUpdateChecker->setAuthentication('');
 // end updater
 
-require_once plugin_dir_path(__FILE__) . 'importer.php';
-require_once plugin_dir_path(__FILE__) . 'redirect.php';
-require_once plugin_dir_path(__FILE__) . 'redirect-log.php';
+function btw_importer_include_files() {
+    require_once plugin_dir_path(__FILE__) . 'importer.php';
+    require_once plugin_dir_path(__FILE__) . 'redirect.php';
+    require_once plugin_dir_path(__FILE__) . 'redirect-log.php';
+}
+add_action('plugins_loaded', 'btw_importer_include_files');

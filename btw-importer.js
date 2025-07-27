@@ -34,6 +34,7 @@ jQuery(document).ready(function($) {
                 if (!response.success) {
                     $('#progress').append('<br>❌ ' + escapeHtml(response.data));
                     isImporting = false; // stop on error
+                    $('#importOverlay').hide(); // hide overlay
                     return;
                 }
 
@@ -41,6 +42,7 @@ jQuery(document).ready(function($) {
                 if (!allItems.length) {
                     $('#progress').append('<br>⚠ No posts/pages found.');
                     isImporting = false;
+                    $('#importOverlay').hide(); // hide overlay
                     return;
                 }
 

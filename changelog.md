@@ -7,6 +7,10 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 ## 🧾 Changelog
 
+### 2.1.4
+- Fix post type: `page` redirect not working properly
+- Auto hide overlay on fail, error, or stopped import
+
 ### 2.1.3
 - Security improvement to comply with wordpress standard
 - Performance optimization

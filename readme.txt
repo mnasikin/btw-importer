@@ -63,6 +63,10 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+= 2.1.4 =
+* Fix post type: `page` redirect not working properly
+* Auto hide overlay on fail, error, or stopped import
+
 = 2.1.3 =
 * Security improvement to comply with wordpress standard
 * Performance optimization
