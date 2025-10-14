@@ -6,6 +6,8 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## 🧾 Changelog
+### 2.2.0 
+- Fix HTML content on pages not imported
 
 ### 2.1.4
 - Fix post type: `page` redirect not working properly

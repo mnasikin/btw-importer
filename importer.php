@@ -144,9 +144,24 @@ class btw_importer_Importer {
         $date_gmt = sanitize_text_field($raw_post['date_gmt'] ?? '');
         $categories = $raw_post['categories'] ?? [];
         $filename = sanitize_text_field($raw_post['filename'] ?? '');
+        // Allow HTML Format
         $allowed_tags = wp_kses_allowed_html('post');
-        $allowed_tags['iframe'] = ['src'=>true,'width'=>true,'height'=>true,'frameborder'=>true,'allowfullscreen'=>true,'class'=>true,'youtube-src-id'=>true];
-        $content = wp_kses($raw_post['content'] ?? '', $allowed_tags);
+        $allowed_tags['iframe'] = [
+            'src' => true,
+            'width' => true,
+            'height' => true,
+            'frameborder' => true,
+            'allowfullscreen' => true,
+            'class' => true,
+            'youtube-src-id' => true
+        ];
+        if ($post_type === 'page') {
+            // Allow HTML for pages
+            $content = wp_kses($raw_post['content'] ?? '', $allowed_tags);
+        } else {
+            // Allow HTML for posts
+            $content = wp_kses($raw_post['content'] ?? '', $allowed_tags);
+        }
         $post_status = in_array($raw_post['status'], ['publish','draft','trash']) ? $raw_post['status'] : 'publish';
         $msgs = [];
 
