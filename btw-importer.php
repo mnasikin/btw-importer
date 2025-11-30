@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name:        BtW Importer - Free Blogger/Blogspot Migration
+Plugin Name:        [Beta] BtW Importer - Free Blogger/Blogspot Migration
 Plugin URI:         https://github.com/mnasikin/btw-importer
 Description:        Simple yet powerful plugin to Migrate Blogger to WordPress in one click for free. Import .atom from Google Takeout and the plugin will migrate your content.
-Version:            2.2.0
+Version:            3.0.0
 Author:             M. Nasikin
 Author URI:         https://github.com/mnasikin/
 License:            MIT
@@ -13,10 +13,9 @@ Requires PHP:       7.4
 GitHub Plugin URI:  https://github.com/mnasikin/btw-importer
 Primary Branch:     main
 */
-
-// updater
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// updater
 require 'updater/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 

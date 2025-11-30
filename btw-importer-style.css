@@ -1,0 +1,598 @@
+.btw_importer_wrap {
+    max-width: 1200px;
+    margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.btw_importer_header {
+    background: linear-gradient(120deg, #0073aa 10%, #fb8c00 50%, #0073aa 100%);
+    color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 115, 170, 0.3);
+}
+
+.btw_importer_header h1 {
+    margin: 0 0 15px 0;
+    font-size: 32px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+}
+
+.btw_importer_header h1 .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+}
+
+.btw_importer_subtitle {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.btw_importer_notice {
+    background: #fff;
+    border-left: 4px solid #fb8c00;
+    border-radius: 8px;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_notice_header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btw_importer_notice_header .dashicons {
+    color: #fb8c00;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+}
+
+.btw_importer_notice_header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #1f2937;
+}
+
+.btw_importer_notice_list {
+    list-style: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+.btw_importer_notice_list li {
+    padding: 12px 0 12px 35px;
+    position: relative;
+    border-bottom: 1px solid #f3f4f6;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.btw_importer_notice_list li:last-child {
+    border-bottom: none;
+}
+
+.btw_importer_notice_list li .dashicons {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    color: #ff6600;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.btw_importer_checkbox_wrapper {
+    background: #fff3e0;
+    padding: 15px 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btw_importer_checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.btw_importer_checkbox_wrapper label {
+    margin: 0;
+    font-weight: 500;
+    color: #e65100;
+    cursor: pointer;
+}
+
+.btw_importer_upload_section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_upload_box {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    background: #f9fafb;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.btw_importer_upload_box:hover {
+    border-color: #0073aa;
+    background: #f3f4f6;
+}
+
+.btw_importer_upload_box .dashicons {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #9ca3af;
+    margin-bottom: 15px;
+}
+
+.btw_importer_file_input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.btw_importer_file_label {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #0073aa;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.btw_importer_file_label:hover {
+    background: #005a87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4);
+}
+
+.btw_importer_file_hint {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 10px 0 0 0;
+}
+
+.btw_importer_start_btn {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 30px !important;
+    font-size: 16px !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    background: #fb8c00 !important;
+    border-color: #f57c00 !important;
+    transition: all 0.3s ease !important;
+    line-height: 1.2;
+}
+
+.btw_importer_start_btn:hover:not(:disabled) {
+    background: #f57c00 !important;
+    border-color: #ef6c00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 140, 0, 0.4) !important;
+}
+
+.btw_importer_start_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btw_importer_start_btn .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.btw_importer_overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+.btw_importer_overlay_content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+}
+
+.btw_importer_overlay_content p {
+    font-size: 24px;
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+.btw_importer_overlay_warning {
+    font-size: 18px !important;
+    opacity: 0.9;
+}
+
+.btw_importer_spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: btw_importer_spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes btw_importer_spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btw_importer_progress {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-height: 600px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    display: none;
+}
+
+.btw_importer_progress:not(:empty) {
+    display: block;
+}
+
+.btw_importer_progress div {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 4px;
+    background: #f9fafb;
+    border-left: 3px solid #d1d5db;
+}
+
+.btw_importer_progress div:hover {
+    background: #f3f4f6;
+}
+
+/* Pagination */
+/* Pagination Styles */
+.btw_importer_pagination {
+    margin-top: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_pagination .tablenav-pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btw_importer_pagination .tablenav-pages .displaying-num {
+    margin-right: 15px;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.btw_importer_pagination .tablenav-pages a,
+.btw_importer_pagination .tablenav-pages span.current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btw_importer_pagination .tablenav-pages a {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.btw_importer_pagination .tablenav-pages a:hover {
+    background: #0073aa;
+    color: #fff;
+    border-color: #0073aa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 115, 170, 0.3);
+}
+
+.btw_importer_pagination .tablenav-pages span.current {
+    background: linear-gradient(135deg, #0073aa 0%, #fb8c00 100%);
+    color: #fff;
+    border: 1px solid transparent;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 115, 170, 0.3);
+}
+
+.btw_importer_pagination .tablenav-pages .prev-page,
+.btw_importer_pagination .tablenav-pages .next-page {
+    padding: 0 16px;
+}
+
+.btw_importer_pagination .tablenav-pages .tablenav-pages-navspan {
+    color: #9ca3af;
+    padding: 0 8px;
+}
+
+/* Disabled state */
+.btw_importer_pagination .tablenav-pages .disabled,
+.btw_importer_pagination .tablenav-pages .tablenav-pages-navspan {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Redirect Log Specific Styles */
+.btw_importer_search_actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btw_importer_search_form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex: 1;
+}
+
+.btw_importer_search_input {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    min-width: 250px;
+    font-size: 14px;
+}
+
+.btw_importer_search_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    background: #0073aa !important;
+    border-color: #005a87 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btw_importer_search_btn:hover {
+    background: #005a87 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4) !important;
+}
+
+.btw_importer_search_btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+}
+
+.btw_importer_clear_form {
+    display: inline-block;
+}
+
+.btw_importer_clear_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    background: #dc2626 !important;
+    border-color: #b91c1c !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+}
+
+.btw_importer_clear_btn:hover {
+    background: #b91c1c !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+}
+
+.btw_importer_clear_btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+}
+
+.btw_importer_empty_state {
+    text-align: center;
+    padding: 60px 30px !important;
+}
+
+.btw_importer_empty_icon {
+    font-size: 48px !important;
+    width: 48px !important;
+    height: 48px !important;
+    color: #9ca3af;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.btw_importer_empty_state p {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.btw_importer_table_wrapper {
+    background: #fff;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.btw_importer_table {
+    border: none;
+    margin: 0;
+}
+
+.btw_importer_table_header {
+    background: linear-gradient(120deg, #0073aa 10%, #fb8c00 50%, #0073aa 100%);
+}
+
+.btw_importer_table_header th {
+    color: #fff;
+    font-weight: 600;
+    padding: 15px 20px;
+    border: none;
+}
+
+.btw_importer_table tbody td {
+    padding: 12px 20px;
+}
+
+.btw_importer_sortable {
+    color: #fff !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btw_importer_sortable:hover {
+    opacity: 0.9;
+}
+
+.btw_importer_old_url {
+    color: #fb8c00;
+    text-decoration: none;
+}
+
+.btw_importer_old_url:hover {
+    text-decoration: underline;
+}
+
+.btw_importer_new_url {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.btw_importer_new_url:hover {
+    text-decoration: underline;
+}
+
+.btw_importer_post_type_badge {
+    background: #f3f4f6;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4b5563;
+    display: inline-block;
+}
+
+.btw_importer_pagination {
+    margin-top: 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .btw_importer_header {
+        padding: 30px 20px;
+    }
+    
+    .btw_importer_header h1 {
+        font-size: 24px;
+    }
+    
+    .btw_importer_upload_box {
+        padding: 30px 20px;
+    }
+    
+    .btw_importer_notice {
+        padding: 20px;
+    }
+    .btw_importer_pagination .tablenav-pages {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .btw_importer_pagination .tablenav-pages .displaying-num {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .btw_importer_pagination .tablenav-pages a,
+    .btw_importer_pagination .tablenav-pages span.current {
+        min-width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+    .btw_importer_search_actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btw_importer_search_form {
+        flex-direction: column;
+    }
+    
+    .btw_importer_search_input {
+        min-width: 100%;
+    }
+    
+    .btw_importer_table_wrapper {
+        overflow-x: auto;
+    }
+}

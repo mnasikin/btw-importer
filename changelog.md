@@ -6,6 +6,13 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## 🧾 Changelog
+## 3.0.0 
+- Compability test with WordPress 6.9
+- Add styling on Importer and Redirect Log page
+- Add legacy image URL (now support more image format and URL type)
+- Add `wp_safe_redirect` in redirect for better security
+- Security update based on WordPress 6.9 and PCP 1.7.0
+
 ### 2.2.0 
 - Fix HTML content on pages not imported
 

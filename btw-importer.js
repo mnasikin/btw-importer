@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
                         $('#progress').append('<br>' + cleanMsg);
                     }
                 });
-                $('#progress').append('<br>----------------------------------------');
+                $('#progress').append('<br>');
             } else {
                 $('#progress').append('<br>❌ Failed: ' + escapeHtml(response.data));
             }

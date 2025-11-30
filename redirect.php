@@ -20,7 +20,7 @@ function btw_importer_handle_old_permalink_redirect() {
         $current_path = rtrim($current_path, '/');
     }
 
-    // Match Blogger old permalink: /YYYY/MM/slug.html
+    // Match Blogger old permalink: /YYYY/MM/slug.html and /p/slug.html
     if (preg_match('#(/\\d{4}/\\d{2}/.+\\.html$|/p/.+\\.html$)#', $current_path)) {
         $query = new WP_Query([
             'post_type'  => ['post', 'page'],
@@ -37,7 +37,7 @@ function btw_importer_handle_old_permalink_redirect() {
             $post = $query->posts[0];
             $new_url = get_permalink($post->ID);
             if ($new_url) {
-                wp_redirect($new_url, 301);
+                wp_safe_redirect($new_url, 301);
                 exit;
             }
         }

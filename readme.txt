@@ -1,9 +1,9 @@
-=== BtW Importer - Free Blogger/Blogspot Migration ===
+=== [Beta] BtW Importer - Free Blogger/Blogspot Migration ===
 Contributors: silversh  
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
-Tested up to: 6.8  
-Stable tag: 2.2.0  
+Tested up to: 6.9  
+Stable tag: 3.0.0  
 Requires PHP: 7.4  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -24,6 +24,7 @@ Designed to be fast, reliable, and compatible with WordPress 6.8+, this plugin s
 * Sets featured images using the first image in each post  
 * Displays real-time progress during import  
 * Supports image formats: `jpg, jpeg, png, gif, webp, bmp, svg, tiff, avif, ico`. Undownloaded images and videos still embedded, but with external files.  
+* Support legacy image download
 * Import content based on post type  
 * Keep external embedded content  
 * Posts or Pages date sync as date in the .atom file (e.g. your Blogspot post published on 2022/02/02, then the post in WordPress also 2022/02/02)  
@@ -63,6 +64,14 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 3.0.0 =
+* Compability test with WordPress 6.9
+* Add styling on Importer and Redirect Log page
+* Add legacy image URL (now support more image format and URL type)
+* Add `wp_safe_redirect` in redirect for better security
+* Security update based on WordPress 6.9 and PCP 1.7.0
+
 = 2.2.0 =
 * Fix HTML content on pages not imported
 

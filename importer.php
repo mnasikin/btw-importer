@@ -21,6 +21,7 @@ class btw_importer_Importer {
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
         wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '2.1.3', true);
+        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '2.1.3');
         wp_localize_script('btw-importer', 'btw_importer', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('btw_importer_nonce')
@@ -28,32 +29,54 @@ class btw_importer_Importer {
     }
 
     public function import_page() {
-        echo '<div class="wrap">
-            <h1>BtW Importer</h1>
-            <p>A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Don&apos;t forget to share this plugin if you found it&apos;s usefull</p>
-            <div id="importNotice" style="margin:20px;">
-            <h2>⚠️ Please Read Before Importing ⚠️</h2>
-            <ul>
-                <li>🛑 ️This plugin doesn&apos;t overwrite existing posts with the same name. If you&apos;ve previously used an importer, it&apos;s recommended to manually delete the previously imported content.</li>
-                <li>🛑 301 redirects only work if you previously used a custom domain on Blogspot and you&apos;re moving that domain to WordPress.</li>
-                <li>🛑 Make sure not to leave this page while the process is underway, or the import will stop, and you&apos;ll need to start from the beginning.</li>
-                <li>🛑 301 redirects work if this plugin is active and you have already run the importer.</li>
-                <li>🛑 Only image from Google/Blogspot will be downloaded.</li>
-                <li>🛑 Be sure to manually check your content after the import process is complete.</li>
-            </ul>
-              <input type="checkbox" id="agreeNotice">
-              <label for="agreeNotice">
-                I&apos;ve read all of them and I want to start the importer.
-              </label>
+        echo '<div class="wrap btw_importer_wrap">
+            <div class="btw_importer_header">
+                <h1>BtW Importer</h1>
+                <p class="btw_importer_subtitle">A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Don&apos;t forget to share this plugin if you found it&apos;s usefull</p>
             </div>
-            <input type="file" id="atomFile" accept=".xml,.atom" />
-            <button id="startImport" class="button button-primary" disabled>Start Import</button><br>
-            <label for="atomFile">Accepted File: .xml,.atom</label>
-            <hr>
-            <div id="importOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); color: #fff; font-size: 20px; z-index: 9999; text-align: center; padding-top: 20%;">
-                ⚠ Import in progress... Please don’t close, reload, or navigate away.
+            
+            <div id="importNotice" class="btw_importer_notice">
+                <div class="btw_importer_notice_header">
+                    <span class="dashicons dashicons-warning"></span>
+                    <h2>Please Read Before Importing</h2>
+                </div>
+                <ul class="btw_importer_notice_list">
+                    <li><span class="dashicons dashicons-no"></span> This plugin doesn&apos;t overwrite existing posts with the same name. If you&apos;ve previously used an importer, it&apos;s recommended to manually delete the previously imported content.</li>
+                    <li><span class="dashicons dashicons-no"></span> 301 redirects only work if you previously used a custom domain on Blogspot and you&apos;re moving that domain to WordPress.</li>
+                    <li><span class="dashicons dashicons-no"></span> Make sure not to leave this page while the process is underway, or the import will stop, and you&apos;ll need to start from the beginning.</li>
+                    <li><span class="dashicons dashicons-no"></span> 301 redirects work if this plugin is active and you have already run the importer.</li>
+                    <li><span class="dashicons dashicons-no"></span> Only image from Google/Blogspot will be downloaded.</li>
+                    <li><span class="dashicons dashicons-no"></span> Be sure to manually check your content after the import process is complete.</li>
+                </ul>
+                <div class="btw_importer_checkbox_wrapper">
+                    <input type="checkbox" id="agreeNotice" class="btw_importer_checkbox">
+                    <label for="agreeNotice">
+                        I&apos;ve read all of them and I want to start the importer.
+                    </label>
+                </div>
             </div>
-            <div id="progress" style="margin-top:20px; max-height:100vh; max-width;100%; overflow:auto; background:#fff; padding:10px; border:1px solid #ddd;"></div>
+            
+            <div class="btw_importer_upload_section">
+                <div class="btw_importer_upload_box">
+                    <span class="dashicons dashicons-media-document"></span>
+                    <input type="file" id="atomFile" accept=".xml,.atom" class="btw_importer_file_input" />
+                    <label for="atomFile" class="btw_importer_file_label">Choose your Blogger export file (.xml or .atom)</label>
+                    <p class="btw_importer_file_hint">Accepted File: .xml, .atom</p>
+                </div>
+                <button id="startImport" class="button button-primary btw_importer_start_btn" disabled>
+                    <span class="dashicons dashicons-controls-play"></span> Start Import
+                </button>
+            </div>
+            
+            <div id="importOverlay" class="btw_importer_overlay">
+                <div class="btw_importer_overlay_content">
+                    <div class="btw_importer_spinner"></div>
+                    <p>Import in progress...</p>
+                    <p class="btw_importer_overlay_warning">Please don&apos;t close, reload, or navigate away.</p>
+                </div>
+            </div>
+            
+            <div id="progress" class="btw_importer_progress"></div>
         </div>';
     }
 
@@ -215,13 +238,13 @@ class btw_importer_Importer {
         }
 
         // find unique blogger/googleusercontent images by basename (after /sXXX/)
-        preg_match_all('/https?:\/\/[^"\']+\.(jpg|jpeg|png|gif|webp|bmp|svg)/i', $content, $matches);
+        preg_match_all('/https?:\/\/[^\s"\'<>]+?\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?[^\s"\'<>]*)?/i', $content, $matches);
         $image_by_basename = [];
         foreach (array_unique($matches[0]) as $img_url) {
             if (!preg_match('/(blogspot|googleusercontent)/i', $img_url)) continue;
 
-            if (preg_match('#/s\d+/(.+)$#', $img_url, $m)) {
-                $basename = $m[1];
+            if (preg_match('#/(s\d+(?:-h)?|w\d+-h\d+)/([^/]+)$#i', $img_url, $m)) {
+                $basename = $m[2];
             } else {
                 $basename = basename(wp_parse_url($img_url, PHP_URL_PATH));
             }
