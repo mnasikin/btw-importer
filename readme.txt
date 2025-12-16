@@ -3,8 +3,8 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
 Tested up to: 6.9  
-Stable tag: 3.0.0  
-Requires PHP: 7.4  
+Stable tag: 4.0.0  
+Requires PHP: 8.1  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
 
@@ -13,9 +13,11 @@ Import your Blogger .atom file from Google Takeout and migrate to WordPress, fre
 == Description ==
 BtW Importer is a powerful yet simple migration tool that helps you seamlessly transfer your content from Blogger (Blogspot) to WordPress with minimal effort. Whether you're a casual blogger or managing a large archive, this plugin handles the complex parts so you don’t have to.
 
-With just one click, BtW Importer lets you upload your .atom file from Google Takeout and automatically imports your posts—images, links, formatting, and more. It also enhances your content by downloading embedded images, replacing Blogger URLs with WordPress-friendly links, and setting featured images based on the first image in each post. Plus, you’ll get real-time progress feedback so you can watch the migration unfold with confidence.
+With just 3 steps, BtW Importer lets you upload your .atom file from Google Takeout and automatically imports your posts—images, links, formatting, and more. It also enhances your content by downloading embedded images, replacing Blogger URLs with WordPress-friendly links, and setting featured images based on the first image in each post. Plus, you’ll get real-time progress feedback so you can watch the migration unfold with confidence.
 
-Designed to be fast, reliable, and compatible with WordPress 6.8+, this plugin streamlines the process and saves you hours of manual work.
+Designed to be fast, reliable, and compatible with WordPress 6.9+, this plugin streamlines the process and saves you hours of manual work.
+
+Notice: Nginx-based server maybe slower when importing content than Apache or Litespeed. If you're using Nginx-based server, it's recommended to import blogspot content in wordpress localhost, then upload to hosting or server.
 
 == Features ==
 
@@ -24,7 +26,7 @@ Designed to be fast, reliable, and compatible with WordPress 6.8+, this plugin s
 * Sets featured images using the first image in each post  
 * Displays real-time progress during import  
 * Supports image formats: `jpg, jpeg, png, gif, webp, bmp, svg, tiff, avif, ico`. Undownloaded images and videos still embedded, but with external files.  
-* Support legacy image download
+* Support legacy image download (for content older than 2008)
 * Import content based on post type  
 * Keep external embedded content  
 * Posts or Pages date sync as date in the .atom file (e.g. your Blogspot post published on 2022/02/02, then the post in WordPress also 2022/02/02)  
@@ -43,13 +45,15 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Download your `.atom` file:  
    Blogger → Settings → Back Up → Download → redirects to Google Takeout  
 2. Open the BtW Importer menu in WordPress  
+3. Read and check the agreement
 3. Upload the `.atom` file from your local storage  
-4. Click Start Import  
+4. Extract the atom file in second step
+5. Start the migration  
 5. Monitor the live progress  
 6. Done! Your Blogger content is now in WordPress
 
 == Requirements ==
-* PHP 7.4 or later  
+* PHP 8.1 or later  
 * cURL PHP Extension  
 * `SimpleXML` PHP Extension
 * `allow_url_fopen` enabled  
@@ -64,6 +68,20 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.0.0 =
+* Add multi-step import UI with visual step indicator (Upload → Extract → Import)
+* Add steps pagination behavior
+* Add modern styling for import controls (Start, Pause, Resume, Cancel buttons)
+* Add stats display with card layout (Total Items, Posts, Pages)
+* Add scrollable import log and auto-scroll
+* Add timer pause/resume, elapsed time pauses when import is paused
+* Now `.atom` file temporary stored in `wp-content/uploads/btw-importer-temp/`. Auto deleted after import finished
+* Disable/enable button states based on import status
+* Using batch delay system to imporve Nginx-based server performance
+* Batch delay 50ms for faster imports
+* Remove import overlay completely
+* UI improvements
 
 = 3.0.0 =
 * Compability test with WordPress 6.9
@@ -119,5 +137,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 2.1.0 =
+= 4.0.0 =
  Please check the changelog tab to check what's new.

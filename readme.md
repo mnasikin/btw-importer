@@ -11,6 +11,8 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 ## ⚔️ Note
 Make sure to check your content after you import contents. Also, this plugin doesn't overwrite current post or pages, so if you've imported posts or pages and want to import again, kindly delete the previous imported posts, pages, and images.
 
+*For some reason, Nginx-based server are slower when importing compared to Apache or Litespeed. If you're using Nginx, it's recommended to install in local wordpress, then upload the wordpress to hosting.*
+
 
 ## ✨ Features
 
@@ -30,7 +32,7 @@ Make sure to check your content after you import contents. Also, this plugin doe
 
 ## 📝 Requirements
 
-- PHP `7.4` or later  
+- PHP `8.1` or later  
 - `cURL` PHP extension  
 - `allow_url_fopen` enabled 
 - `SimpleXML`/`XML` PHP Extension 
@@ -44,22 +46,24 @@ Make sure to check your content after you import contents. Also, this plugin doe
 
 ## 📷 Screenshots
 1. Importer Page
-![Importer Page](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v2.0.0/screenshot-1.png)
+![Importer Page](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v4.0.0/screenshot-1.png)
 2. Import Process
-![Import Process](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v2.0.0/screenshot-2.png)
+![Import Process](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v4.0.0/screenshot-2.png)
 3. Done Importing
-![Done Importing](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v2.0.0/screenshot-3.png)
+![Done Importing](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v4.0.0/screenshot-3.png)
 4. Redirect Log
-![Redirect Log](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v2.0.0/screenshot-4.png)
+![Redirect Log](https://ik.imagekit.io/vbsmdqxuemd/btw-importer/v4.0.0/screenshot-4.png)
 
 
 ## 🚀 Usage
 
 1. Download your `.atom` file:  
-   `Blogger → Settings → Back Up → Download → redirects to Google Takeout`
-2. Open the **BtW Importer** menu in WordPress  
+   Blogger → Settings → Back Up → Download → redirects to Google Takeout  
+2. Open the BtW Importer menu in WordPress  
+3. Read and check the agreement
 3. Upload the `.atom` file from your local storage  
-4. Click **Start Import**  
+4. Extract the atom file in second step
+5. Start the migration  
 5. Monitor the live progress  
 6. Done! Your Blogger content is now in WordPress
 

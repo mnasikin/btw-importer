@@ -29,6 +29,7 @@
     height: 36px;
 }
 
+
 .btw_importer_subtitle {
     margin: 0;
     font-size: 16px;
@@ -126,24 +127,27 @@
 
 .btw_importer_upload_box {
     border: 2px dashed #d1d5db;
-    border-radius: 8px;
-    padding: 40px;
+    border-radius: 12px;
+    padding: 40px 30px;
     text-align: center;
     background: #f9fafb;
     transition: all 0.3s ease;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     position: relative;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .btw_importer_upload_box:hover {
     border-color: #0073aa;
-    background: #f3f4f6;
+    background: #f0f9ff;
 }
 
 .btw_importer_upload_box .dashicons {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
     color: #9ca3af;
     margin-bottom: 15px;
 }
@@ -161,21 +165,109 @@
 }
 
 .btw_importer_file_label {
-    display: inline-block;
-    padding: 12px 24px;
-    background: #0073aa;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #0073aa 0%, #005a87 100%);
     color: #fff;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    margin-bottom: 10px;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 115, 170, 0.3);
 }
 
 .btw_importer_file_label:hover {
-    background: #005a87;
+    background: linear-gradient(135deg, #005a87 0%, #004a6e 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4);
+}
+
+.btw_importer_file_label .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    margin: 0;
+}
+
+/* Upload Button Styling */
+#btw_importer_upload_btn,
+.btw_importer_btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, #fb8c00 0%, #f57c00 100%) !important;
+    border-color: #f57c00 !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(251, 140, 0, 0.3) !important;
+    cursor: pointer;
+}
+
+#btw_importer_upload_btn:hover:not(:disabled),
+.btw_importer_btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 140, 0, 0.4) !important;
+}
+
+#btw_importer_upload_btn:disabled,
+.btw_importer_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#btw_importer_upload_btn .dashicons,
+.btw_importer_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Upload Status */
+.btw_importer_status {
+    margin-top: 15px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btw_importer_status:not(:empty) {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+}
+
+/* Center content in step */
+.btw_importer_step {
+    text-align: center;
+}
+
+.btw_importer_step p {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #64748b;
+}
+
+.btw_importer_step_header {
+    text-align: left;
 }
 
 .btw_importer_file_hint {
@@ -545,6 +637,517 @@
     margin-top: 20px;
 }
 
+/* Import Info Box - Stats in a row */
+.btw_importer_info_box {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.btw_importer_info_box:empty {
+    display: none;
+}
+
+.btw_importer_info_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    padding: 20px 30px;
+    min-width: 120px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.btw_importer_info_item strong {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.btw_importer_info_item span,
+.btw_importer_info_item:not(:has(span))::after {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0073aa;
+}
+
+/* Controls - Centered */
+.btw_importer_controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+/* Start Button - Blue */
+.btw_importer_start_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    background: #0073aa !important;
+    border-color: #005a87 !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 115, 170, 0.3) !important;
+}
+
+.btw_importer_start_btn:hover:not(:disabled) {
+    background: #005a87 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4) !important;
+}
+
+.btw_importer_start_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btw_importer_start_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Pause Button - Orange */
+.btw_importer_pause_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    background: #fb8c00 !important;
+    border-color: #f57c00 !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(251, 140, 0, 0.3) !important;
+}
+
+.btw_importer_pause_btn:hover:not(:disabled) {
+    background: #f57c00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 140, 0, 0.4) !important;
+}
+
+.btw_importer_pause_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btw_importer_pause_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Resume Button - Orange */
+.btw_importer_resume_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    background: #fb8c00 !important;
+    border-color: #f57c00 !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(251, 140, 0, 0.3) !important;
+}
+
+.btw_importer_resume_btn:hover:not(:disabled) {
+    background: #f57c00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 140, 0, 0.4) !important;
+}
+
+.btw_importer_resume_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btw_importer_resume_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Cancel Button - Orange */
+.btw_importer_cancel_btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    background: #fb8c00 !important;
+    border-color: #f57c00 !important;
+    color: #fff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(251, 140, 0, 0.3) !important;
+}
+
+.btw_importer_cancel_btn:hover:not(:disabled) {
+    background: #f57c00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(251, 140, 0, 0.4) !important;
+}
+
+.btw_importer_cancel_btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btw_importer_cancel_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+}
+
+/* Progress Container - Centered */
+.btw_importer_progress_container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Progress Bar */
+.btw_importer_progress_bar {
+    position: relative;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btw_importer_progress_fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0073aa 0%, #fb8c00 100%);
+    border-radius: 12px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.btw_importer_progress_fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: btw_importer_shimmer 2s infinite;
+}
+
+@keyframes btw_importer_shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.btw_importer_progress_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    font-weight: 600;
+    color: #1f2937;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Timer - Centered */
+.btw_importer_timer {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fb8c00;
+    margin: 15px 0;
+    text-align: center;
+}
+
+/* Import Log Card */
+.btw_importer_log {
+    max-height: 400px;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.btw_importer_log:empty {
+    display: none;
+}
+
+/* Log Item Base */
+.btw_importer_log_item {
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: #fff;
+    border-left: 4px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #475569;
+    transition: all 0.2s ease;
+}
+
+.btw_importer_log_item:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transform: translateX(2px);
+}
+
+/* Header - Main import entry (post/page title) */
+.btw_importer_log_header {
+    border-left-color: #0073aa;
+    background: linear-gradient(90deg, #f0f9ff 0%, #ffffff 100%);
+    font-weight: 600;
+    color: #1e40af;
+    font-size: 14px;
+}
+
+.btw_importer_log_header:hover {
+    border-left-color: #005a87;
+}
+
+/* Detail - Sub-items (redirect, category, image) */
+.btw_importer_log_detail {
+    margin-left: 24px;
+    border-left-color: #94a3b8;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 12px;
+    padding: 10px 14px;
+}
+
+.btw_importer_log_detail:hover {
+    background: #f1f5f9;
+}
+
+/* Error state */
+.btw_importer_log_error {
+    border-left-color: #ef4444;
+    background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+    color: #dc2626;
+}
+
+.btw_importer_log_error:hover {
+    border-left-color: #dc2626;
+}
+
+/* Success indicator for completed items */
+.btw_importer_log_item.btw_importer_log_success {
+    border-left-color: #22c55e;
+    background: linear-gradient(90deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+/* Summary card at the end */
+.btw_importer_summary {
+    display: inline-block;
+    background: linear-gradient(135deg, #0073aa 0%, #005a87 100%);
+    border: none;
+    padding: 16px 32px;
+    margin: 20px auto 8px auto;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
+    text-align: center;
+    width: auto;
+    max-width: 400px;
+}
+
+.btw_importer_log .btw_importer_summary {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Step Indicator */
+.btw_importer_steps {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 30px;
+    padding: 25px 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_step_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+}
+
+.btw_importer_step_number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    border: 3px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.btw_importer_step_num {
+    font-size: 18px;
+    font-weight: 600;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.btw_importer_step_check {
+    display: none;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #fff;
+}
+
+.btw_importer_step_label {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #9ca3af;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btw_importer_step_connector {
+    position: absolute;
+    top: 24px;
+    left: calc(50% + 30px);
+    width: calc(100% - 60px);
+    height: 3px;
+    background: #e5e7eb;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.btw_importer_step_item:last-child .btw_importer_step_connector {
+    display: none;
+}
+
+/* Step States - Active */
+.btw_importer_step_item.active .btw_importer_step_number {
+    background: #fff;
+    border-color: #fb8c00;
+    box-shadow: 0 0 0 4px rgba(251, 140, 0, 0.2);
+}
+
+.btw_importer_step_item.active .btw_importer_step_num {
+    color: #fb8c00;
+}
+
+.btw_importer_step_item.active .btw_importer_step_label {
+    color: #fb8c00;
+    font-weight: 600;
+}
+
+/* Step States - Completed (using primary blue) */
+.btw_importer_step_item.completed .btw_importer_step_number {
+    background: #0073aa;
+    border-color: #0073aa;
+}
+
+.btw_importer_step_item.completed .btw_importer_step_num {
+    display: none;
+}
+
+.btw_importer_step_item.completed .btw_importer_step_check {
+    display: block;
+}
+
+.btw_importer_step_item.completed .btw_importer_step_label {
+    color: #0073aa;
+    font-weight: 600;
+}
+
+.btw_importer_step_item.completed .btw_importer_step_connector {
+    background: #0073aa;
+}
+
+/* Step Content Container */
+.btw_importer_step {
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_step_header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.btw_importer_step_header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btw_importer_step_header h2 .dashicons {
+    color: #0073aa;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
 /* Responsive */
 @media screen and (max-width: 768px) {
     .btw_importer_header {
@@ -562,6 +1165,60 @@
     .btw_importer_notice {
         padding: 20px;
     }
+    
+    /* Step Indicator Mobile */
+    .btw_importer_steps {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding: 20px;
+    }
+    
+    .btw_importer_step_item {
+        flex-direction: row;
+        max-width: none;
+        width: 100%;
+        padding: 15px 0;
+    }
+    
+    .btw_importer_step_number {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+    
+    .btw_importer_step_num {
+        font-size: 16px;
+    }
+    
+    .btw_importer_step_check {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .btw_importer_step_label {
+        margin-top: 0;
+        margin-left: 15px;
+        text-align: left;
+    }
+    
+    .btw_importer_step_connector {
+        position: absolute;
+        top: calc(100% - 7px);
+        left: 19px;
+        width: 3px;
+        height: 30px;
+    }
+    
+    .btw_importer_step {
+        padding: 20px;
+    }
+    
+    .btw_importer_step_header h2 {
+        font-size: 18px;
+    }
+    
     .btw_importer_pagination .tablenav-pages {
         flex-wrap: wrap;
         gap: 8px;

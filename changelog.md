@@ -5,8 +5,22 @@
 A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer posts, images, and formatting from Blogger (Blogspot) to WordPress. Whether you're a casual blogger or managing a large archive, this plugin handles the complex parts so you don’t have to.
 
 
-## 🧾 Changelog
-## 3.0.0 
+## Changelog
+### 4.0.0
+- Add multi-step import UI with visual step indicator (Upload → Extract → Import)
+- Add steps pagination behavior
+- Add modern styling for import controls (Start, Pause, Resume, Cancel buttons)
+- Add stats display with card layout (Total Items, Posts, Pages)
+- Add scrollable import log and auto-scroll
+- Add timer pause/resume, elapsed time pauses when import is paused
+- Now `.atom` file temporary stored in `wp-content/uploads/btw-importer-temp/`. Auto deleted after import finished
+- Disable/enable button states based on import status
+- Using batch delay system to imporve Nginx-based server performance
+- Batch delay 50ms for faster imports
+- Remove import overlay completely
+- UI improvements
+
+### 3.0.0 
 - Compability test with WordPress 6.9
 - Add styling on Importer and Redirect Log page
 - Add legacy image URL (now support more image format and URL type)

@@ -26,21 +26,10 @@ class btw_importer_Redirect_Log {
             return;
         }
         
-        wp_enqueue_style( 
-            'btw-importer-style', 
-            plugin_dir_url( __FILE__ ) . 'btw-importer-style.css', 
-            [], 
-            '2.1.4' 
-        );
+        wp_enqueue_style( 'btw-importer-style', plugin_dir_url( __FILE__ ) . 'btw-importer-style.css', [], '4.0.0' );
         
         if ( $hook === 'toplevel_page_btw-importer' ) {
-            wp_enqueue_script(
-                'btw-importer', 
-                plugin_dir_url( __FILE__ ) . 'btw-importer.js', 
-                [ 'jquery' ], 
-                '2.1.4', 
-                true
-            );
+            wp_enqueue_script('btw-importer', plugin_dir_url( __FILE__ ) . 'btw-importer.js', [ 'jquery' ], '4.0.0', true );
             wp_localize_script( 'btw-importer', 'btw_importer', [
                 'ajaxUrl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'btw_importer_nonce' )
@@ -55,10 +44,10 @@ class btw_importer_Redirect_Log {
 
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified below
         if (
-            isset( $_POST['btw_clear_log_nonce'] ) &&
+            isset( $_POST['btw_importer_clear_log_nonce'] ) &&
             wp_verify_nonce(
-                sanitize_text_field( wp_unslash( $_POST['btw_clear_log_nonce'] ) ),
-                'btw_clear_log'
+                sanitize_text_field( wp_unslash( $_POST['btw_importer_clear_log_nonce'] ) ),
+                'btw_importer_clear_log'
             )
         ) {
             global $wpdb;
@@ -103,7 +92,7 @@ class btw_importer_Redirect_Log {
         $order     = in_array( $order_raw, [ 'ASC', 'DESC' ], true ) ? $order_raw : 'DESC';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified below
-        if ( isset( $_GET['btw_redirect_log_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['btw_redirect_log_nonce'] ) ), 'btw_redirect_log_nonce' ) ) {
+        if ( isset( $_GET['btw_importer_redirect_log_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['btw_importer_redirect_log_nonce'] ) ), 'btw_importer_redirect_log_nonce' ) ) {
             wp_die( esc_html__( 'Security check failed.', 'btw-importer' ) );
         }
 
@@ -146,8 +135,8 @@ class btw_importer_Redirect_Log {
         );
         // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-        $cache_key       = 'btw_redirect_log_' . md5( $query );
-        $total_cache_key = 'btw_redirect_log_total_' . md5( $query );
+        $cache_key       = 'btw_importer_redirect_log_' . md5( $query );
+        $total_cache_key = 'btw_importer_redirect_log_total_' . md5( $query );
 
         $results = wp_cache_get( $cache_key, 'btw_importer' );
 
@@ -172,8 +161,8 @@ class btw_importer_Redirect_Log {
         echo '<p class="btw_importer_subtitle">' . esc_html__( 'This table shows old Blogger slugs and the new WordPress URLs that have been created as redirects.', 'btw-importer' ) . '</p>';
         echo '</div>';
 
-        $clear_nonce  = wp_create_nonce( 'btw_clear_log' );
-        $search_nonce = wp_create_nonce( 'btw_redirect_log_nonce' );
+        $clear_nonce  = wp_create_nonce( 'btw_importer_clear_log' );
+        $search_nonce = wp_create_nonce( 'btw_importer_redirect_log_nonce' );
 
         echo '<div class="btw_importer_upload_section">';
         echo '<div class="btw_importer_search_actions">';
@@ -181,12 +170,12 @@ class btw_importer_Redirect_Log {
         echo '<form method="get" class="btw_importer_search_form">';
         echo '<input type="hidden" name="page" value="btw-redirect-log" />';
         echo '<input type="search" name="s" class="btw_importer_search_input" placeholder="' . esc_attr__( 'Search slug...', 'btw-importer' ) . '" value="' . esc_attr( $search ) . '" />';
-        echo '<input type="hidden" name="btw_redirect_log_nonce" value="' . esc_attr( $search_nonce ) . '" />';
+        echo '<input type="hidden" name="btw_importer_redirect_log_nonce" value="' . esc_attr( $search_nonce ) . '" />';
         echo '<button type="submit" class="button button-primary btw_importer_search_btn"><span class="dashicons dashicons-search"></span> ' . esc_attr__( 'Search', 'btw-importer' ) . '</button>';
         echo '</form>';
 
         echo '<form method="post" class="btw_importer_clear_form" onsubmit="return confirm(\'' . esc_js( __( 'Are you sure you want to clear the entire redirect log?', 'btw-importer' ) ) . '\');">';
-        echo '<input type="hidden" name="btw_clear_log_nonce" value="' . esc_attr( $clear_nonce ) . '" />';
+        echo '<input type="hidden" name="btw_importer_clear_log_nonce" value="' . esc_attr( $clear_nonce ) . '" />';
         echo '<button type="submit" class="button btw_importer_clear_btn"><span class="dashicons dashicons-trash"></span> ' . esc_attr__( 'Clear Log', 'btw-importer' ) . '</button>';
         echo '</form>';
         
