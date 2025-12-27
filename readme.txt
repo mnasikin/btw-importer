@@ -3,7 +3,7 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
 Tested up to: 6.9  
-Stable tag: 4.0.0  
+Stable tag: 4.1.0  
 Requires PHP: 8.1  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -68,6 +68,19 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.1.0 =
+* Added: Batch processing with 4 speed options
+* Added: Support for modern Blogger image URLs without file extensions
+* Added: Automatic image format detection using MIME type
+* Added: Image format preservation (PNG, GIF, WEBP, BMP keep original format)
+* Fixed: Image URLs in posts now correctly replaced with local WordPress URLs
+* Fixed: Images without extensions not downloading
+* Fixed: Long filename handling (100+ characters now use short hash)
+* Fixed: TIFF images auto-converted to JPG for browser compatibility
+* Improved: Caching system to prevent re-downloading same images
+* Improved: Better error handling for expired Blogger URLs
+* Note: Batch size `Fastest` only recommended for VPS/dedicated servers
 
 = 4.0.0 =
 * Add multi-step import UI with visual step indicator (Upload → Extract → Import)
@@ -137,5 +150,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 4.0.0 =
+= 4.1.0 =
  Please check the changelog tab to check what's new.

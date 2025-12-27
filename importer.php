@@ -114,7 +114,30 @@ class btw_importer_Importer {
                     <h2><span class="dashicons dashicons-download"></span> Step 3: Import Content</h2>
                 </div>
                 <div id="btw_import_info" class="btw_importer_info_box"></div>
+                <div class="btw_importer_batch_settings">
+                        <label class="btw_importer_batch_label">Batch Size:</label>
+                        <div class="btw_importer_radio_group">
+                            <label class="btw_importer_radio_option">
+                                <input type="radio" name="btw_importer_batch_size" value="1" class="btw_importer_radio_input">
+                                <span class="btw_importer_radio_text">Safest - Slow</span>
+                            </label>
+                            <label class="btw_importer_radio_option">
+                                <input type="radio" name="btw_importer_batch_size" value="3" class="btw_importer_radio_input" checked>
+                                <span class="btw_importer_radio_text">Recommended</span>
+                            </label>
+                            <label class="btw_importer_radio_option">
+                                <input type="radio" name="btw_importer_batch_size" value="5" class="btw_importer_radio_input">
+                                <span class="btw_importer_radio_text">Fast - Good Server</span>
+                            </label>
+                            <label class="btw_importer_radio_option">
+                                <input type="radio" name="btw_importer_batch_size" value="10" class="btw_importer_radio_input">
+                                <span class="btw_importer_radio_text">Very Fast - VPS Only (Some images may fail)</span>
+                            </label>
+                        </div>
+                        <p class="description">Start with Recommended option. Increase only if you have VPS/dedicated server.</p>
+                    </div>
                 <div class="btw_importer_controls">
+                    
                     <button id="btw_importer_start_import_btn" class="button btw_importer_start_btn">
                         <span class="dashicons dashicons-controls-play"></span> Start
                     </button>
@@ -292,7 +315,7 @@ class btw_importer_Importer {
             }
         }
         
-        // Reset image cache untuk import baru
+        // Reset image cache for new import
         delete_transient('btw_importer_image_cache');
         
         update_option('btw_importer_data', $posts, false);
@@ -316,7 +339,8 @@ class btw_importer_Importer {
     public function ajax_import_batch() {
         check_ajax_referer('btw_importer_nonce', 'nonce');
         
-        $batch_size = 1;
+        $batch_size = isset($_POST['batchSize']) ? absint($_POST['batchSize']) : 3;
+        $batch_size = max(1, min($batch_size, 10));
         $status = get_option('btw_importer_status');
         
         if ($status['status'] === 'paused') {
@@ -342,7 +366,7 @@ class btw_importer_Importer {
         $status['status'] = $status['processed'] >= $status['total'] ? 'completed' : 'running';
         update_option('btw_importer_status', $status, false);
         
-        // Cleanup jika selesai
+        // Cleanup after finished
         if ($status['status'] === 'completed') {
             delete_transient('btw_importer_image_cache');
         }
@@ -380,6 +404,28 @@ class btw_importer_Importer {
         wp_send_json_success(['status' => 'cancelled']);
     }
 
+    private function btw_importer_normalize_blogger_url($url) {
+        // For modern format without extension (googleusercontent.com/img/)
+        if (preg_match('#blogger\.googleusercontent\.com/img/#i', $url) && 
+            !preg_match('/\.(jpg|jpeg|png|gif|webp|bmp)$/i', $url)) {
+            
+            // Strip any size parameter
+            $url = preg_replace('#(/s\d+(?:-h)?/|/w\d+-h\d+/)#i', '/s0/', $url);
+            $url = preg_replace('#=s\d+$#i', '', $url);
+            $url = preg_replace('#=w\d+-h\d+$#i', '', $url);
+            
+            return $url;
+        }
+        
+        // For old format with extension - strip size from path
+        if (preg_match('#/(s\d+(?:-h)?|w\d+-h\d+)/([^/]+\.(jpg|jpeg|png|gif|webp|bmp))#i', $url, $m)) {
+            // Replace size with s0 (original)
+            return preg_replace('#/(s\d+(?:-h)?|w\d+-h\d+)/#i', '/s0/', $url);
+        }
+        
+        return $url;
+    }
+
     private function import_single_post_internal($raw_post) {
         $title = sanitize_text_field($raw_post['title'] ?? '');
         $author = sanitize_text_field($raw_post['author'] ?? '');
@@ -400,7 +446,7 @@ class btw_importer_Importer {
         
         $msgs = [];
         
-        // Load image cache dari transient
+        // Load image cache from transient
         $this->downloaded_images = get_transient('btw_importer_image_cache');
         if (!$this->downloaded_images) {
             $this->downloaded_images = [];
@@ -462,66 +508,205 @@ class btw_importer_Importer {
         }
         
         // Images
-        preg_match_all('/https?:\/\/[^\s"\'<>]+?\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?[^\s"\'<>]*)?/i', $content, $matches);
-        $image_by_basename = [];
-        
-        foreach (array_unique($matches[0]) as $img_url) {
-            if (!preg_match('/(blogspot|googleusercontent)/i', $img_url)) continue;
-            
-            if (preg_match('#/(s\d+(?:-h)?|w\d+-h\d+)/([^/]+)$#i', $img_url, $m)) {
-                $basename = $m[2];
-            } else {
-                $basename = basename(wp_parse_url($img_url, PHP_URL_PATH));
-            }
-            
-            if (!isset($image_by_basename[$basename])) {
-                $image_by_basename[$basename] = $img_url;
-            } else {
-                if (preg_match('#/s(\d+)/#', $img_url, $m1) && preg_match('#/s(\d+)/#', $image_by_basename[$basename], $m2)) {
-                    if ((int)$m1[1] > (int)$m2[1]) {
-                        $image_by_basename[$basename] = $img_url;
-                    }
-                }
+        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $content, $img_tags);
+
+        $btw_importer_blogger_patterns = [
+            // Googleusercontent (modern)
+            '/https?:\/\/blogger\.googleusercontent\.com\/[^\s"\'<>)]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg|tiff?)(?:\?[^\s"\'<>)]*)?/i',
+            // Googleusercontent WITHOUT extension (new format /img/a/)
+            '/https?:\/\/blogger\.googleusercontent\.com\/img\/[^\s"\'<>)]+(?:=s\d+)?/i',
+            // Blogspot CDN
+            '/https?:\/\/[^\/]*\.bp\.blogspot\.com\/[^\s"\'<>)]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg|tiff?)(?:\?[^\s"\'<>)]*)?/i',
+            // Blogspot direct
+            '/https?:\/\/[^\/]*\.blogspot\.com\/[^\s"\'<>)]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg|tiff?)(?:\?[^\s"\'<>)]*)?/i',
+            // Old Blogger photos server
+            '/https?:\/\/photos\d*\.blogger\.com\/[^\s"\'<>)]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg|tiff?)(?:\?[^\s"\'<>)]*)?/i',
+        ];
+
+        $btw_importer_all_image_urls = isset($img_tags[1]) ? $img_tags[1] : [];
+
+        foreach ($btw_importer_blogger_patterns as $btw_importer_pattern) {
+            preg_match_all($btw_importer_pattern, $content, $url_matches);
+            if (!empty($url_matches[0])) {
+                $btw_importer_all_image_urls = array_merge($btw_importer_all_image_urls, $url_matches[0]);
             }
         }
+
+        $matches[0] = array_unique($btw_importer_all_image_urls);
+        $btw_importer_image_by_basename = [];
+        
+        foreach (array_unique($matches[0]) as $img_url) {
+    if (!preg_match('/(blogspot|googleusercontent|photos\d*\.blogger\.com)/i', $img_url)) continue;
+    
+    // NORMALIZE URL first
+    $normalized_url = $this->btw_importer_normalize_blogger_url($img_url);
+    
+    if (preg_match('#/(s\d+(?:-h)?|w\d+-h\d+)/([^/]+)$#i', $normalized_url, $m)) {
+        $basename = $m[2];
+    } else {
+        $parsed = wp_parse_url($normalized_url);
+        $path = isset($parsed['path']) ? $parsed['path'] : '';
+        $basename = basename($path);
+        $basename = preg_replace('/[=?&].+$/', '', $basename);
+    }
+    
+    $basename = urldecode($basename);
+    $basename = sanitize_file_name($basename);
+
+    if (!preg_match('/\.[a-z]{2,4}$/i', $basename) || strlen($basename) > 100) {
+        $basename = substr(md5($normalized_url), 0, 12) . '.tmp';
+    }
+
+    $name_part = pathinfo($basename, PATHINFO_FILENAME);
+    $ext_part = pathinfo($basename, PATHINFO_EXTENSION);
+    if (strlen($name_part) > 100) {
+        $name_part = substr($name_part, 0, 100);
+        $basename = $name_part . ($ext_part ? '.' . $ext_part : '');
+    }
+    
+    // Use normalized URL
+    if (!isset($btw_importer_image_by_basename[$basename])) {
+        $btw_importer_image_by_basename[$basename] = $normalized_url;
+    }
+}
         
         $first_media_id = null;
         
-        foreach ($image_by_basename as $img_url) {
-            if (isset($this->downloaded_images[$img_url])) {
-                $content = str_replace($img_url, $this->downloaded_images[$img_url], $content);
-                $msgs[] = '✅ Used cached image: ' . $img_url;
-                continue;
-            }
-            
-            $msgs[] = '⏳ Downloading: ' . $img_url;
-            $tmp = download_url($img_url);
-            
-            if (is_wp_error($tmp)) {
-                $msgs[] = '⚠ Failed to download: ' . $img_url;
-                continue;
-            }
-            
-            $file = ['name' => basename(wp_parse_url($img_url, PHP_URL_PATH)), 'tmp_name' => $tmp];
-            $media_id = media_handle_sideload($file, $post_id);
-            
-            if (is_wp_error($media_id)) {
-                wp_delete_file($tmp);
-                $msgs[] = '⚠ Failed to attach: ' . $img_url;
-                continue;
-            }
-            
-            $new_url = wp_get_attachment_url($media_id);
-            if ($new_url) {
-                $this->downloaded_images[$img_url] = $new_url;
-                // SIMPAN KE TRANSIENT
-                set_transient('btw_importer_image_cache', $this->downloaded_images, DAY_IN_SECONDS);
-                $content = str_replace($img_url, $new_url, $content);
-                $msgs[] = '✅ Replaced: ' . $img_url . ' → ' . $new_url;
-                if (!$first_media_id) $first_media_id = $media_id;
-            }
+foreach ($btw_importer_image_by_basename as $basename => $img_url) {
+    if (isset($this->downloaded_images[$basename])) {
+        $msgs[] = '✅ Cached: ' . $img_url;
+        if (!$first_media_id) {
+            $attachment_id = attachment_url_to_postid($this->downloaded_images[$basename]);
+            if ($attachment_id) $first_media_id = $attachment_id;
+        }
+        continue;
+    }
+    
+    $msgs[] = '⏳ Downloading: ' . $img_url;
+    $tmp = download_url($img_url);
+    
+    if (is_wp_error($tmp)) {
+        $msgs[] = '⚠ Failed to download: ' . $img_url;
+        continue;
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime_type = finfo_file($finfo, $tmp);
+    finfo_close($finfo);
+
+    $mime_to_ext = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/webp' => 'webp',
+        'image/bmp' => 'bmp',
+        'image/svg+xml' => 'svg',
+        'image/tiff' => 'tiff'
+    ];
+    
+    $original_extension = strtolower(pathinfo($basename, PATHINFO_EXTENSION));
+
+    if (preg_match('/\.tmp$/i', $basename) || strpos($basename, md5($img_url)) === 0) {
+        $detected_ext = isset($mime_to_ext[$mime_type]) ? $mime_to_ext[$mime_type] : 'jpg';
+        $clean_name = preg_replace('/[^a-zA-Z0-9_-]/', '-', pathinfo($basename, PATHINFO_FILENAME));
+        if (empty($clean_name) || strlen($clean_name) < 3) {
+            $clean_name = substr(md5($img_url), 0, 12);
+        }
+        $basename = sanitize_file_name($clean_name . '.' . $detected_ext);
+        $original_extension = $detected_ext;
+        $msgs[] = '🔍 Detected format: .' . $detected_ext;
+    }
+    
+    if (in_array($original_extension, ['tiff', 'tif'])) {
+        $original_extension = 'jpg';
+        $basename = preg_replace('/\.(tiff?|TIF)$/i', '.jpg', $basename);
+        $msgs[] = '🔄 Converting TIFF to JPG for browser compatibility';
+    }
+    
+    $manual_formats = ['webp', 'bmp', 'png', 'gif'];
+    
+    if (in_array($original_extension, $manual_formats)) {
+        $upload_dir = wp_upload_dir();
+        $filename = wp_unique_filename($upload_dir['path'], $basename);
+        $new_file = $upload_dir['path'] . '/' . $filename;
+        
+        if (!copy($tmp, $new_file)) {
+            wp_delete_file($tmp);
+            $msgs[] = '⚠ Failed to copy: ' . $img_url;
+            continue;
         }
         
+        wp_delete_file($tmp);
+        
+        $mime_types = [
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'bmp' => 'image/bmp'
+        ];
+        
+        $mime_type = isset($mime_types[$original_extension]) ? $mime_types[$original_extension] : 'image/jpeg';
+        
+        $attachment = [
+            'guid' => $upload_dir['url'] . '/' . $filename,
+            'post_mime_type' => $mime_type,
+            'post_title' => preg_replace('/\.[^.]+$/', '', $basename),
+            'post_content' => '',
+            'post_status' => 'inherit'
+        ];
+        
+        $media_id = wp_insert_attachment($attachment, $new_file, $post_id);
+        
+        if (is_wp_error($media_id)) {
+            wp_delete_file($new_file);
+            $msgs[] = '⚠ Failed to attach: ' . $img_url;
+            continue;
+        }
+        
+        $attach_data = wp_generate_attachment_metadata($media_id, $new_file);
+        wp_update_attachment_metadata($media_id, $attach_data);
+        
+    } else {
+        $file = ['name' => $basename, 'tmp_name' => $tmp];
+        $media_id = media_handle_sideload($file, $post_id);
+        
+        if (is_wp_error($media_id)) {
+            wp_delete_file($tmp);
+            $msgs[] = '⚠ Failed to attach: ' . $img_url;
+            continue;
+        }
+    }
+    
+    $new_url = wp_get_attachment_url($media_id);
+    if ($new_url) {
+        $this->downloaded_images[$basename] = $new_url;
+        set_transient('btw_importer_image_cache', $this->downloaded_images, DAY_IN_SECONDS);
+        $msgs[] = '✅ Replaced: ' . $img_url . ' → ' . $new_url;
+        if (!$first_media_id) $first_media_id = $media_id;
+    }
+}
+
+                // STAGE 2: Replace all images from mapping
+        foreach ($this->downloaded_images as $cached_basename => $new_url) {
+    $escaped_basename = preg_quote($cached_basename, '#');
+    $content = preg_replace(
+        '#https?://[^\s"\'<>)]*(?:blogspot|googleusercontent|photos\d*\.blogger\.com)[^\s"\'<>)]*/' . $escaped_basename . '(?:\?[^\s"\'<>)]*)?#i',
+        $new_url,
+        $content
+    );
+}
+
+        // STAGE 3: Synchronize <a href> with <img src>
+        $content = preg_replace_callback(
+            '#<a([^>]*?)href=["\']([^"\']+)["\']([^>]*)>\s*<img([^>]+)src=["\']([^"\']+)["\']([^>]*)>\s*</a>#is',
+            function ($m) {
+                return '<a' . $m[1] . 'href="' . esc_url($m[5]) . '"' . $m[3] . '>'
+                     . '<img' . $m[4] . 'src="' . $m[5] . '"' . $m[6] . '>'
+                     . '</a>';
+            },
+            $content
+        );
+
         wp_update_post(['ID' => $post_id, 'post_content' => $content]);
         
         if ($first_media_id) {

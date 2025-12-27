@@ -6,6 +6,19 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.1.0
+- Added: Batch processing with 4 speed options
+- Added: Support for modern Blogger image URLs without file extensions
+- Added: Automatic image format detection using MIME type
+- Added: Image format preservation (PNG, GIF, WEBP, BMP keep original format)
+- Fixed: Image URLs in posts now correctly replaced with local WordPress URLs
+- Fixed: Images without extensions not downloading
+- Fixed: Long filename handling (100+ characters now use short hash)
+- Fixed: TIFF images auto-converted to JPG for browser compatibility
+- Improved: Caching system to prevent re-downloading same images
+- Improved: Better error handling for expired Blogger URLs
+- Note: Batch size `Fastest` only recommended for VPS/dedicated servers
+
 ### 4.0.0
 - Add multi-step import UI with visual step indicator (Upload → Extract → Import)
 - Add steps pagination behavior

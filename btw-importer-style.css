@@ -910,6 +910,10 @@
     padding: 20px;
     margin-top: 20px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .btw_importer_log:empty {
@@ -1147,6 +1151,70 @@
     width: 24px;
     height: 24px;
 }
+
+/* Batch Size Radio Buttons */
+.btw_importer_batch_settings {
+    margin-bottom: 20px;
+}
+
+.btw_importer_batch_label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #1d2327;
+}
+
+.btw_importer_radio_group {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btw_importer_radio_option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 2px solid #dcdcde;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+    margin: 0;
+}
+
+.btw_importer_radio_option:hover {
+    border-color: #2271b1;
+    background: #f6f7f7;
+}
+
+.btw_importer_radio_input {
+    margin: 0;
+    cursor: pointer;
+}
+
+.btw_importer_radio_input:checked + .btw_importer_radio_text {
+    font-weight: 600;
+    color: #2271b1;
+}
+
+.btw_importer_radio_option:has(.btw_importer_radio_input:checked) {
+    border-color: #2271b1;
+    background: #f0f6fc;
+}
+
+.btw_importer_radio_text {
+    font-size: 14px;
+    color: #50575e;
+    cursor: pointer;
+}
+
+.btw_importer_batch_settings .description {
+    margin-top: 8px;
+    color: #646970;
+}
+
 
 /* Responsive */
 @media screen and (max-width: 768px) {

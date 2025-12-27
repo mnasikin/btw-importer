@@ -322,7 +322,8 @@ jQuery(document).ready(function($) {
         
         $.post(btw_importer.ajaxUrl, {
             action: 'btw_importer_import_batch',
-            nonce: btw_importer.nonce
+            nonce: btw_importer.nonce,
+            batchSize: $('input[name="btw_importer_batch_size"]:checked').val() || 3 
         }, function(response) {
             if (response.success) {
                 const data = response.data;
