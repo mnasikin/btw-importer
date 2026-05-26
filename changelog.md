@@ -6,6 +6,10 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.2.1
+- Minor improvements
+- Compability update for WordPress 7.0
+
 ### 4.2.0
 - Added: Author selection for imported posts (choose specific user or original Blogger author)
 - Added: Dedicated AJAX endpoint for reliable user fetching (bypasses browser cache issues)

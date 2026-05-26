@@ -2,8 +2,8 @@
 Contributors: silversh  
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
-Tested up to: 6.9  
-Stable tag: 4.1.0  
+Tested up to: 7.0  
+Stable tag: 4.2.1  
 Requires PHP: 8.1  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -68,6 +68,14 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.2.1 =
+* Minor improvements
+* Compability update for WordPress 7.0
+
+= 4.2.0 =
+* Added: Author selection for imported posts (choose specific user or original Blogger author)
+* Added: Dedicated AJAX endpoint for reliable user fetching (bypasses browser cache issues)
 
 = 4.1.0 =
 * Added: Batch processing with 4 speed options
@@ -150,5 +158,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 4.1.0 =
+= 4.2.1 =
  Please check the changelog tab to check what's new.
