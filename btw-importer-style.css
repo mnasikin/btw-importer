@@ -234,6 +234,7 @@
     width: 18px;
     height: 18px;
     line-height: 1;
+    color: #fff !important;
 }
 
 /* Upload Status */
@@ -264,6 +265,104 @@
     margin-left: auto;
     margin-right: auto;
     color: #64748b;
+}
+
+.btw_importer_advanced_options {
+    max-width: 720px;
+    box-sizing: border-box;
+    margin: 30px auto 24px !important;
+    padding: 0;
+    background: #fff !important;
+    border: 1px solid #dbeafe !important;
+    border-left: 4px solid #0073aa !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+.btw_importer_advanced_toggle {
+    width: 100%;
+    padding: 20px 24px;
+    border: 0;
+    background: transparent;
+    color: #0073aa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+}
+
+.btw_importer_advanced_toggle:hover,
+.btw_importer_advanced_toggle:focus {
+    color: #005a87;
+}
+
+.btw_importer_advanced_toggle:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: -2px;
+}
+
+.btw_importer_advanced_title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btw_importer_advanced_title .dashicons {
+    color: #fb8c00;
+}
+
+.btw_importer_advanced_arrow {
+    color: #0073aa;
+    transition: transform 0.2s ease;
+}
+
+.btw_importer_advanced_options.is-open .btw_importer_advanced_arrow {
+    transform: rotate(180deg);
+}
+
+.btw_importer_advanced_body {
+    padding: 18px 24px 22px;
+}
+
+.btw_importer_advanced_option {
+    padding: 0 0 18px;
+    margin: 0 0 18px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.btw_importer_advanced_option:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.btw_importer_conversion_label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btw_importer_conversion_label strong {
+    display: block;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.btw_importer_conversion_label small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 .btw_importer_step_header {
@@ -309,6 +408,7 @@
     height: 20px;
     line-height: 1;
     flex-shrink: 0;
+    color: #fff !important;
 }
 
 .btw_importer_overlay {
@@ -721,6 +821,7 @@
     width: 18px;
     height: 18px;
     line-height: 1;
+    color: #fff !important;
 }
 
 /* Pause Button - Orange */
@@ -758,6 +859,7 @@
     width: 18px;
     height: 18px;
     line-height: 1;
+    color: #fff !important;
 }
 
 /* Resume Button - Orange */
@@ -795,6 +897,7 @@
     width: 18px;
     height: 18px;
     line-height: 1;
+    color: #fff !important;
 }
 
 /* Cancel Button - Orange */
@@ -832,6 +935,16 @@
     width: 18px;
     height: 18px;
     line-height: 1;
+    color: #fff !important;
+}
+
+.btw_importer_pause_btn:disabled .dashicons,
+.btw_importer_resume_btn:disabled .dashicons {
+    color: #8ecae6 !important;
+}
+
+.btw_importer_cancel_btn:disabled .dashicons {
+    color: #cbd5e1 !important;
 }
 
 /* Progress Container - Centered */
@@ -1322,30 +1435,11 @@
     }
 }
 /* Author Selector Step 2 */
-.btw_importer_author_selector {
-    text-align: left;
-    max-width: 600px;
-    margin: 30px auto 0 !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+.btw_importer_advanced_options {
     backdrop-filter: blur(10px);
 }
 
-.btw_importer_author_selector h3 {
-    margin: 0 0 10px 0;
-    font-size: 18px;
-    color: #0073aa;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btw_importer_author_selector .dashicons {
-    color: #fb8c00;
-}
-
-.btw_importer_author_selector .description {
+.btw_importer_advanced_options .description {
     margin-bottom: 20px !important;
     font-size: 14px;
     color: #64748b;
@@ -1358,6 +1452,11 @@
     padding: 0 12px;
     background-color: #f8fafc;
     transition: all 0.3s ease;
+}
+
+#btw_importer_author_dropdown_wrap {
+    margin-top: 16px;
+    padding-left: 32px;
 }
 
 #btw_importer_author_select:focus {

@@ -3,7 +3,7 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
 Tested up to: 7.0  
-Stable tag: 4.2.1  
+Stable tag: 4.3.0  
 Requires PHP: 8.1  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -35,6 +35,7 @@ Notice: Nginx-based server maybe slower when importing content than Apache or Li
 * Only download original size images (avoid duplicated)  
 * Automatically add 301 redirect from Blogspot permalink to new WordPress URL to keep your SEO (only for post with `/YYYY/MM/slug.html` format)  
 * Redirect log page to check list of redirection has been made, also option to clear redirection logs
+* Optional conversion from imported Blogger HTML to WordPress block markup
 
 == Note ==
 Make sure to check your content after you import contents. Also, this plugin doesn't overwrite current post or pages, so if you've imported posts or pages and want to import again, kindly delete the previous imported posts, pages, and images.
@@ -68,6 +69,11 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.3.0 =
+* Added: Optional conversion from imported Blogger HTML to WordPress block markup.
+* Added: Collapsible Advanced Options panel in the importer UI.
+* Improved: Advanced importer options layout and icon color consistency.
 
 = 4.2.1 =
 * Minor improvements
@@ -158,5 +164,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 4.2.1 =
+= 4.3.0 =
  Please check the changelog tab to check what's new.

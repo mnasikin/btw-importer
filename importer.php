@@ -26,8 +26,8 @@ class btw_importer_Importer {
 
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
-        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '4.2.0', true);
-        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.2.0');
+        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '4.3.0', true);
+        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.0');
 
         wp_localize_script('btw-importer', 'btw_importer', (object)[
             'ajaxUrl' => admin_url('admin-ajax.php'), 
@@ -139,18 +139,40 @@ class btw_importer_Importer {
                 </div>
                 <div id="btw_import_info" class="btw_importer_info_box"></div>
 
-                <div id="btw_importer_author_selector" class="btw_importer_author_selector" style="display:none; margin-bottom: 25px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                    <h3 style="margin-top:0;"><span class="dashicons dashicons-admin-users"></span> Author for Imported Posts</h3>
-                    <p class="description">Choose which WordPress user will be the author of the imported content.</p>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <input type="checkbox" id="btw_importer_use_original_author" checked>
-                        <label for="btw_importer_use_original_author" style="cursor:pointer;">Use original Blogger author (match by name or fallback to admin)</label>
-                    </div>
-                    
-                    <div id="btw_importer_author_dropdown_wrap" style="display:none;">
-                        <label for="btw_importer_author_select" style="display: block; margin-bottom: 8px; font-weight:600;">Select WordPress User:</label>
-                        <select id="btw_importer_author_select" class="widefat" style="max-width: 100%;"></select>
+                <div id="btw_importer_author_selector" class="btw_importer_advanced_options" style="display:none;">
+                    <button type="button" id="btw_importer_advanced_toggle" class="btw_importer_advanced_toggle" aria-expanded="false" aria-controls="btw_importer_advanced_body">
+                        <span class="btw_importer_advanced_title">
+                            <span class="dashicons dashicons-admin-generic"></span>
+                            <span>Advanced Options</span>
+                        </span>
+                        <span class="dashicons dashicons-arrow-down-alt2 btw_importer_advanced_arrow"></span>
+                    </button>
+
+                    <div id="btw_importer_advanced_body" class="btw_importer_advanced_body" hidden>
+                        <div class="btw_importer_advanced_option">
+                            <label class="btw_importer_conversion_label" for="btw_importer_use_original_author">
+                                <input type="checkbox" id="btw_importer_use_original_author" class="btw_importer_checkbox" checked>
+                                <span>
+                                    <strong>Import author blog</strong>
+                                    <small>Use the original Blogger author when possible. If no matching WordPress user is found, BtW Importer will fall back to the admin user.</small>
+                                </span>
+                            </label>
+
+                            <div id="btw_importer_author_dropdown_wrap" style="display:none;">
+                                <label for="btw_importer_author_select" style="display: block; margin-bottom: 8px; font-weight:600;">Select WordPress User:</label>
+                                <select id="btw_importer_author_select" class="widefat" style="max-width: 100%;"></select>
+                            </div>
+                        </div>
+
+                        <div class="btw_importer_advanced_option">
+                            <label class="btw_importer_conversion_label" for="btw_importer_convert_blocks">
+                                <input type="checkbox" id="btw_importer_convert_blocks" class="btw_importer_checkbox">
+                                <span>
+                                    <strong>Convert imported HTML to WordPress blocks (Experimental)</strong>
+                                    <small>Optional. Rewrites Blogger-style HTML into block markup such as paragraphs, headings, images, lists, and more blocks after image URLs are imported.</small>
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -383,6 +405,7 @@ class btw_importer_Importer {
         $batch_size = max(1, min($batch_size, 10));
         
         $author_id = isset($_POST['author_id']) ? absint($_POST['author_id']) : 0;
+        $convert_blocks = !empty($_POST['convertBlocks']);
         
         $status = get_option('btw_importer_status');
         
@@ -401,7 +424,7 @@ class btw_importer_Importer {
         
         $results = [];
         foreach ($batch as $post_data) {
-            $result = $this->import_single_post_internal($post_data, $author_id);
+            $result = $this->import_single_post_internal($post_data, $author_id, $convert_blocks);
             $results[] = $result;
             $status['processed']++;
         }
@@ -469,7 +492,7 @@ class btw_importer_Importer {
         return $url;
     }
 
-    private function import_single_post_internal($raw_post, $override_author_id = 0) {
+    private function import_single_post_internal($raw_post, $override_author_id = 0, $convert_blocks = false) {
         $title = sanitize_text_field($raw_post['title'] ?? '');
         $author = sanitize_text_field($raw_post['author'] ?? '');
         $post_type = in_array($raw_post['post_type'], ['post','page']) ? $raw_post['post_type'] : 'post';
@@ -752,6 +775,11 @@ foreach ($btw_importer_image_by_basename as $basename => $img_url) {
             },
             $content
         );
+
+        if ($convert_blocks) {
+            $content = btw_importer_Block_Converter::convert($content);
+            $msgs[] = '🧱 Converted HTML to WordPress block markup';
+        }
 
         wp_update_post(['ID' => $post_id, 'post_content' => $content]);
         

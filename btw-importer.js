@@ -114,6 +114,17 @@ jQuery(document).ready(function ($) {
         return $('<div>').text(text).html();
     }
 
+    $('#btw_importer_advanced_toggle').on('click', function () {
+        const toggle = $(this);
+        const card = $('#btw_importer_author_selector');
+        const body = $('#btw_importer_advanced_body');
+        const isOpen = toggle.attr('aria-expanded') === 'true';
+
+        toggle.attr('aria-expanded', isOpen ? 'false' : 'true');
+        card.toggleClass('is-open', !isOpen);
+        body.prop('hidden', isOpen);
+    });
+
     // Step 1: Show upload section after agreeing to notice
     $('#btw_importer_agree_notice').on('change', function () {
         if ($(this).is(':checked')) {
@@ -360,7 +371,8 @@ jQuery(document).ready(function ($) {
             action: 'btw_importer_import_batch',
             nonce: btw_importer.nonce,
             batchSize: $('input[name="btw_importer_batch_size"]:checked').val() || 3,
-            author_id: authorId
+            author_id: authorId,
+            convertBlocks: $('#btw_importer_convert_blocks').is(':checked') ? 1 : 0
         }, function (response) {
             if (response.success) {
                 const data = response.data;

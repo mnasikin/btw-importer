@@ -6,6 +6,11 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.3.0
+- Added: Optional conversion from imported Blogger HTML to WordPress block markup.
+- Added: Collapsible Advanced Options panel in the importer UI.
+- Improved: Advanced importer options layout and icon color consistency.
+
 ### 4.2.1
 - Minor improvements
 - Compability update for WordPress 7.0

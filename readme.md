@@ -29,6 +29,7 @@ Make sure to check your content after you import contents. Also, this plugin doe
 - Only download originial size images (avoid duplicated)
 - Automatically add 301 redirect from blogspot permalink to new wordpress URL to keep your SEO (only for post with `/YYYY/MM/slug.html` format)
 - Redirect log page to check list of redirection has beed made, also option to clear redirection logs
+- Optional conversion from imported Blogger HTML to WordPress block markup
 
 ## 📝 Requirements
 
@@ -70,3 +71,9 @@ Make sure to check your content after you import contents. Also, this plugin doe
 ## 🧾 Changelog
 
 The Changelog moved to dedicated [![Changelog](https://img.shields.io/badge/changelog-fff?style=for-the-badge&logo=download&logoColor=black)](https://github.com/mnasikin/btw-importer/blob/main/changelog.md)  
+
+## 👥 Contributors
+
+Thanks to everyone who has contributed to BtW Importer.
+
+See the full contributor list on [GitHub Contributors](https://github.com/mnasikin/btw-importer/graphs/contributors).
