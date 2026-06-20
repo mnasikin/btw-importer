@@ -13,6 +13,7 @@ function btw_importer_handle_old_permalink_redirect() {
     $original_request_uri = '';
     if (isset($_SERVER['REQUEST_URI'])) {
         $original_request_uri = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']));
+        $original_request_uri = parse_url($original_request_uri, PHP_URL_PATH) ?? $original_request_uri;
     }
 
     // Remove trailing slash if original request ends with .html
