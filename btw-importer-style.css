@@ -612,6 +612,7 @@
     width: 16px;
     height: 16px;
     line-height: 1;
+    color: #fff !important;
 }
 
 .btw_importer_clear_form {
@@ -642,6 +643,7 @@
     width: 16px;
     height: 16px;
     line-height: 1;
+    color: #fff !important;
 }
 
 .btw_importer_empty_state {
@@ -1468,4 +1470,198 @@
 #btw_importer_author_dropdown_wrap label {
     font-weight: 600;
     color: #475569;
+}
+
+body.btw_importer_modal_open {
+    overflow: hidden;
+}
+
+.btw_importer_success_modal[hidden] {
+    display: none !important;
+}
+
+.btw_importer_success_modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.btw_importer_success_backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.62);
+}
+
+.btw_importer_success_dialog {
+    position: relative;
+    width: min(520px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 24px 32px 28px;
+    background: #fff;
+    border: 1px solid #dbeafe;
+    border-top: 4px solid #0073aa;
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.3);
+    text-align: center;
+    animation: btw_importer_modal_in 0.24s ease-out;
+}
+
+@keyframes btw_importer_modal_in {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.btw_importer_success_close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.btw_importer_success_close:hover,
+.btw_importer_success_close:focus {
+    background: #f1f5f9;
+    color: #1f2937;
+}
+
+.btw_importer_success_close:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 1px;
+}
+
+.btw_importer_success_close .dashicons {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 24px;
+}
+
+.btw_importer_success_animation {
+    width: 260px;
+    height: 170px;
+    margin: 0 auto -6px;
+}
+
+.btw_importer_success_animation svg {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.btw_importer_success_fallback {
+    margin-top: 50px;
+    width: 72px;
+    height: 72px;
+    color: #fb8c00;
+    font-size: 72px;
+    line-height: 72px;
+}
+
+.btw_importer_success_dialog h2 {
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 26px;
+    line-height: 1.25;
+}
+
+.btw_importer_success_message {
+    margin: 0 auto 6px !important;
+    color: #475569 !important;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.btw_importer_success_duration {
+    margin: 0 !important;
+    color: #0073aa !important;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btw_importer_success_support {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btw_importer_success_support p {
+    margin: 0 auto 14px !important;
+    color: #64748b !important;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.btw_importer_donate_btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 8px 18px !important;
+    background: #0070ba !important;
+    border-color: #005ea6 !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.btw_importer_donate_btn:hover,
+.btw_importer_donate_btn:focus {
+    background: #005ea6 !important;
+    border-color: #00457c !important;
+    color: #fff !important;
+}
+
+.btw_importer_donate_btn .dashicons {
+    color: #fff !important;
+}
+
+.btw_importer_success_done {
+    display: block !important;
+    min-width: 110px;
+    margin: 18px auto 0 !important;
+}
+
+@media screen and (max-width: 600px) {
+    .btw_importer_success_modal {
+        padding: 14px;
+    }
+
+    .btw_importer_success_dialog {
+        max-height: calc(100vh - 28px);
+        padding: 20px 20px 24px;
+    }
+
+    .btw_importer_success_animation {
+        width: 220px;
+        height: 145px;
+    }
+
+    .btw_importer_success_dialog h2 {
+        font-size: 23px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btw_importer_success_dialog {
+        animation: none;
+    }
 }

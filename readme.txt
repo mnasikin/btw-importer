@@ -3,7 +3,7 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
 Tested up to: 7.0  
-Stable tag: 4.3.0  
+Stable tag: 4.3.1  
 Requires PHP: 8.1  
 License: MIT  
 License URI: https://github.com/mnasikin/btw-importer/blob/main/LICENSE  
@@ -69,6 +69,12 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.3.1 =
+* Fixed: `WP_Scripts::localize` notice by passing localization data as an array.
+* Added: Import success popup with a local Lottie celebration animation.
+* Fixed: Replaced discouraged native `parse_url()` usage with `wp_parse_url()`.
+* Fixed: Some inconsistant icon color.
 
 = 4.3.0 =
 * Added: Optional conversion from imported Blogger HTML to WordPress block markup.
@@ -164,5 +170,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 4.3.0 =
+= 4.3.1 =
  Please check the changelog tab to check what's new.
