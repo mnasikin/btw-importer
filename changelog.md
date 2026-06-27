@@ -6,6 +6,12 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.3.1
+- Fixed: `WP_Scripts::localize` notice by passing localization data as an array.
+- Added: Import success popup with a local Lottie celebration animation.
+- Fixed: Replaced discouraged native `parse_url()` usage with `wp_parse_url()`.
+- Fixed: Some inconsistant icon color.
+
 ### 4.3.0
 - Added: Optional conversion from imported Blogger HTML to WordPress block markup.
 - Added: Collapsible Advanced Options panel in the importer UI.

@@ -5,6 +5,9 @@ jQuery(document).ready(function ($) {
     let btw_importer_timerInterval = null;
     let btw_importer_currentStep = 0; // 0 = notice visible, 1-3 = steps
     let btw_importer_elapsedBeforePause = 0; // Track elapsed time before pause
+    let btw_importer_hadErrors = false;
+    let btw_importer_successAnimation = null;
+    let btw_importer_previousFocus = null;
 
     /**
      * Set the current active step in the step indicator
@@ -123,6 +126,70 @@ jQuery(document).ready(function ($) {
         toggle.attr('aria-expanded', isOpen ? 'false' : 'true');
         card.toggleClass('is-open', !isOpen);
         body.prop('hidden', isOpen);
+    });
+
+    function btw_importer_showSuccessModal(totalTime) {
+        const modal = $('#btw_importer_success_modal');
+        const animationContainer = document.getElementById('btw_importer_success_animation');
+
+        btw_importer_previousFocus = document.activeElement;
+        $('#btw_importer_success_duration').text('Completed in ' + btw_importer_formatDuration(totalTime));
+        modal.prop('hidden', false).addClass('is-visible');
+        $('body').addClass('btw_importer_modal_open');
+
+        if (window.lottie && animationContainer && btw_importer.successAnimationUrl) {
+            try {
+                const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                animationContainer.innerHTML = '';
+                btw_importer_successAnimation = window.lottie.loadAnimation({
+                    container: animationContainer,
+                    renderer: 'svg',
+                    loop: !reduceMotion,
+                    autoplay: !reduceMotion,
+                    path: btw_importer.successAnimationUrl
+                });
+
+                btw_importer_successAnimation.addEventListener('DOMLoaded', function () {
+                    if (reduceMotion && btw_importer_successAnimation) {
+                        btw_importer_successAnimation.goToAndStop(60, true);
+                    }
+                });
+
+                btw_importer_successAnimation.addEventListener('data_failed', function () {
+                    animationContainer.innerHTML = '<span class="dashicons dashicons-awards btw_importer_success_fallback"></span>';
+                });
+            } catch (error) {
+                animationContainer.innerHTML = '<span class="dashicons dashicons-awards btw_importer_success_fallback"></span>';
+            }
+        }
+
+        setTimeout(function () {
+            modal.find('.btw_importer_success_close').trigger('focus');
+        }, 50);
+    }
+
+    function btw_importer_closeSuccessModal() {
+        const modal = $('#btw_importer_success_modal');
+
+        modal.removeClass('is-visible').prop('hidden', true);
+        $('body').removeClass('btw_importer_modal_open');
+
+        if (btw_importer_successAnimation) {
+            btw_importer_successAnimation.destroy();
+            btw_importer_successAnimation = null;
+        }
+
+        if (btw_importer_previousFocus) {
+            $(btw_importer_previousFocus).trigger('focus');
+        }
+    }
+
+    $('[data-btw-dismiss-success]').on('click', btw_importer_closeSuccessModal);
+
+    $(document).on('keydown', function (event) {
+        if (event.key === 'Escape' && !$('#btw_importer_success_modal').prop('hidden')) {
+            btw_importer_closeSuccessModal();
+        }
     });
 
     // Step 1: Show upload section after agreeing to notice
@@ -286,6 +353,7 @@ jQuery(document).ready(function ($) {
     $('#btw_importer_start_import_btn').on('click', function () {
         btw_importer_isImporting = true;
         btw_importer_isPaused = false;
+        btw_importer_hadErrors = false;
         btw_importer_elapsedBeforePause = 0; // Reset elapsed time
         btw_importer_startTime = Date.now();
 
@@ -403,6 +471,7 @@ jQuery(document).ready(function ($) {
                                 });
                             }
                         } else {
+                            btw_importer_hadErrors = true;
                             $('#btw_importer_import_log').append(
                                 '<div class="btw_importer_log_item btw_importer_log_error">' +
                                 '❌ Failed: ' + btw_importer_escapeHtml(result.title) + '</div>'
@@ -457,12 +526,16 @@ jQuery(document).ready(function ($) {
 
         $('#btw_importer_import_log').append(
             '<div class="btw_importer_summary">' +
-            '🎉 Import completed successfully!<br>' +
+            (btw_importer_hadErrors ? 'Import completed with some errors.<br>' : 'Import completed successfully!<br>') +
             '<span class="dashicons dashicons-clock"></span> Total time: ' + btw_importer_formatDuration(totalTime) +
             '</div>'
         );
 
         btw_importer_scrollToBottom();
+
+        if (!btw_importer_hadErrors) {
+            btw_importer_showSuccessModal(totalTime);
+        }
     }
 
     // Scroll to bottom of log

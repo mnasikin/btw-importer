@@ -26,12 +26,14 @@ class btw_importer_Importer {
 
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
-        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery'], '4.3.0', true);
-        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.0');
+        wp_enqueue_script('btw-importer-lottie', plugin_dir_url(__FILE__).'assets/lottie.min.js', [], '5.12.2', true);
+        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery', 'btw-importer-lottie'], '4.3.1', true);
+        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.1');
 
-        wp_localize_script('btw-importer', 'btw_importer', (object)[
+        wp_localize_script('btw-importer', 'btw_importer', [
             'ajaxUrl' => admin_url('admin-ajax.php'), 
             'nonce' => wp_create_nonce('btw_importer_nonce'),
+            'successAnimationUrl' => plugin_dir_url(__FILE__).'assets/import-success.json',
         ]);
     }
 
@@ -221,6 +223,28 @@ class btw_importer_Importer {
                     <p id="btw_importer_timer" class="btw_importer_timer"><span class="dashicons dashicons-clock"></span> Elapsed time: 0s</p>
                 </div>
                 <div id="btw_importer_import_log" class="btw_importer_log"></div>
+            </div>
+
+            <div id="btw_importer_success_modal" class="btw_importer_success_modal" role="dialog" aria-modal="true" aria-labelledby="btw_importer_success_title" hidden>
+                <div class="btw_importer_success_backdrop" data-btw-dismiss-success></div>
+                <div class="btw_importer_success_dialog">
+                    <button type="button" class="btw_importer_success_close" data-btw-dismiss-success aria-label="Close success message">
+                        <span class="dashicons dashicons-no-alt"></span>
+                    </button>
+                    <div id="btw_importer_success_animation" class="btw_importer_success_animation" aria-hidden="true">
+                        <span class="dashicons dashicons-awards btw_importer_success_fallback"></span>
+                    </div>
+                    <h2 id="btw_importer_success_title">Congratulations!</h2>
+                    <p class="btw_importer_success_message">Your Blogger content was imported successfully.</p>
+                    <p id="btw_importer_success_duration" class="btw_importer_success_duration"></p>
+                    <div class="btw_importer_success_support">
+                        <p>Enjoying BtW Importer? Your support helps keep the plugin maintained and improving.</p>
+                        <a class="button btw_importer_donate_btn" href="https://paypal.me/storedot2" target="_blank" rel="noopener noreferrer">
+                            <span class="dashicons dashicons-heart"></span> Donate via PayPal
+                        </a>
+                    </div>
+                    <button type="button" class="button button-primary btw_importer_success_done" data-btw-dismiss-success>Done</button>
+                </div>
             </div>
         </div>';
     }
