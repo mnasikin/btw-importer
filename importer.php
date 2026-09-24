@@ -27,8 +27,8 @@ class btw_importer_Importer {
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
         wp_enqueue_script('btw-importer-lottie', plugin_dir_url(__FILE__).'assets/lottie.min.js', [], '5.12.2', true);
-        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery', 'btw-importer-lottie'], '4.3.1', true);
-        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.1');
+        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery', 'btw-importer-lottie'], '4.3.2', true);
+        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.2');
 
         wp_localize_script('btw-importer', 'btw_importer', [
             'ajaxUrl' => admin_url('admin-ajax.php'), 
@@ -789,10 +789,16 @@ foreach ($btw_importer_image_by_basename as $basename => $img_url) {
     );
 }
 
-        // STAGE 3: Synchronize <a href> with <img src>
+        // STAGE 3: Keep external image links intact, but localize Blogger image links.
         $content = preg_replace_callback(
             '#<a([^>]*?)href=["\']([^"\']+)["\']([^>]*)>\s*<img([^>]+)src=["\']([^"\']+)["\']([^>]*)>\s*</a>#is',
             function ($m) {
+                // An image can link to a download, a post, or another external page.
+                // Only replace the destination when it is still a Blogger-hosted image.
+                if (!preg_match('#^https?://[^/]*(?:blogspot\.com|googleusercontent\.com|photos\d*\.blogger\.com)/#i', $m[2])) {
+                    return $m[0];
+                }
+
                 return '<a' . $m[1] . 'href="' . esc_url($m[5]) . '"' . $m[3] . '>'
                      . '<img' . $m[4] . 'src="' . $m[5] . '"' . $m[6] . '>'
                      . '</a>';
