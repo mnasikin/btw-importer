@@ -6,6 +6,12 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.3.2
+- Changed: License from MIT to GPLv3.
+- Compatibility: Checked with WordPress 7.1.2.
+- Fixed: Preserved external image links during import while localizing Blogger-hosted image links. Credit: [WordPress.org support issue](https://wordpress.org/support/topic/issue-with-image-links-and-multiple-images-when-importing-blogger-atom-feed/)
+- Improved: Aligned importer button icons with their labels.
+
 ### 4.3.1
 - Fixed: `WP_Scripts::localize` notice by passing localization data as an array.
 - Added: Import success popup with a local Lottie celebration animation.

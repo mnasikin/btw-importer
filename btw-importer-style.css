@@ -788,6 +788,12 @@
     flex-wrap: wrap;
 }
 
+#btw_importer_extract_btn .dashicons,
+.btw_importer_controls .button .dashicons {
+    position: relative;
+    top: -10px;
+}
+
 /* Start Button - Blue */
 .btw_importer_start_btn {
     display: inline-flex !important;
