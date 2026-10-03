@@ -28,7 +28,7 @@ Make sure to check your content after you import contents. Also, this plugin doe
 - Only blogspot/google images downloaded, others external (saving your hosting storage, especially if you use external CDN)
 - Only download originial size images (avoid duplicated)
 - Automatically add 301 redirect from blogspot permalink to new wordpress URL to keep your SEO (only for post with `/YYYY/MM/slug.html` format)
-- Redirect log page to check list of redirection has beed made, also option to clear redirection logs
+- Redirect log page to check list of redirection has beed made, also option to delete selected redirections or clear all redirection logs
 - Optional conversion from imported Blogger HTML to WordPress block markup
 
 ## 📝 Requirements

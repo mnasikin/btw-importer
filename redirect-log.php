@@ -7,7 +7,9 @@ class btw_importer_Redirect_Log {
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'btw_importer_add_redirect_log_menu' ] );
         add_action( 'admin_init', [ $this, 'btw_importer_handle_clear_log' ] );
+        add_action( 'admin_init', [ $this, 'btw_importer_handle_delete_selected' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'btw_importer_enqueue_scripts' ] );
+        add_action( 'admin_notices', [ $this, 'btw_importer_render_log_notices' ] );
     }
 
     public function btw_importer_add_redirect_log_menu() {
@@ -26,10 +28,10 @@ class btw_importer_Redirect_Log {
             return;
         }
         
-        wp_enqueue_style( 'btw-importer-style', plugin_dir_url( __FILE__ ) . 'btw-importer-style.css', [], '4.0.0' );
+        wp_enqueue_style( 'btw-importer-style', plugin_dir_url( __FILE__ ) . 'btw-importer-style.css', [], '4.3.3' );
         
         if ( $hook === 'toplevel_page_btw-importer' ) {
-            wp_enqueue_script('btw-importer', plugin_dir_url( __FILE__ ) . 'btw-importer.js', [ 'jquery' ], '4.0.0', true );
+            wp_enqueue_script('btw-importer', plugin_dir_url( __FILE__ ) . 'btw-importer.js', [ 'jquery' ], '4.3.3', true );
             wp_localize_script( 'btw-importer', 'btw_importer', [
                 'ajaxUrl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'btw_importer_nonce' )
@@ -58,6 +60,7 @@ class btw_importer_Redirect_Log {
                     '_old_permalink'
                 )
             );
+            $this->btw_importer_flush_log_cache();
 
             add_action(
                 'admin_notices',
@@ -67,6 +70,112 @@ class btw_importer_Redirect_Log {
                         . '</p></div>';
                 }
             );
+        }
+    }
+
+    public function btw_importer_handle_delete_selected() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified below
+        if ( ! isset( $_POST['btw_importer_delete_nonce'] ) ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['btw_importer_delete_nonce'] ) ), 'btw_importer_delete_records' ) ) {
+            wp_die( esc_html__( 'Security check failed.', 'btw-importer' ) );
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above
+        $raw        = isset( $_POST['btw_importer_selected_records'] ) ? (array) wp_unslash( $_POST['btw_importer_selected_records'] ) : [];
+        $meta_ids   = array_values( array_unique( array_filter( array_map( 'intval', $raw ) ) ) );
+
+        if ( empty( $meta_ids ) ) {
+            $this->btw_importer_redirect_log_redirect( 'none_selected' );
+        }
+
+        global $wpdb;
+        $placeholders = implode( ',', array_fill( 0, count( $meta_ids ), '%d' ) );
+
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is a generated list of %d placeholders, all values are passed to prepare()
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Required for deleting single redirect log records
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_id IN ($placeholders)",
+                array_merge( [ '_old_permalink' ], $meta_ids )
+            )
+        );
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+        $this->btw_importer_flush_log_cache();
+        $this->btw_importer_redirect_log_redirect( 'deleted', count( $meta_ids ) );
+    }
+
+    private function btw_importer_flush_log_cache() {
+        if ( function_exists( 'wp_cache_flush_group' ) ) {
+            wp_cache_flush_group( 'btw_importer' );
+        }
+    }
+
+    private function btw_importer_redirect_log_redirect( $notice, $deleted = 0 ) {
+        $args = [
+            'page'       => 'btw-redirect-log',
+            'btw_notice' => $notice,
+        ];
+
+        if ( $deleted > 0 ) {
+            $args['btw_deleted'] = $deleted;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only values, used only to restore the current view
+        if ( isset( $_GET['s'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, used only to restore the current view
+            $search = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+            if ( '' !== $search ) {
+                $args['s'] = $search;
+            }
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, used only to restore the current view
+        if ( isset( $_GET['paged'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, used only to restore the current view
+            $paged = max( 1, intval( wp_unslash( $_GET['paged'] ) ) );
+            if ( $paged > 1 ) {
+                $args['paged'] = $paged;
+            }
+        }
+
+        wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
+        exit;
+    }
+
+    public function btw_importer_render_log_notices() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, used only to detect the current screen
+        if ( ! isset( $_GET['page'] ) || 'btw-redirect-log' !== sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, only used for a display notice
+        $notice = isset( $_GET['btw_notice'] ) ? sanitize_text_field( wp_unslash( $_GET['btw_notice'] ) ) : '';
+
+        if ( 'deleted' === $notice ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only value, only used for a display notice
+            $deleted = isset( $_GET['btw_deleted'] ) ? max( 0, intval( wp_unslash( $_GET['btw_deleted'] ) ) ) : 0;
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                esc_html(
+                    sprintf(
+                        _n( '%d redirect record deleted.', '%d redirect records deleted.', $deleted, 'btw-importer' ),
+                        $deleted
+                    )
+                )
+            );
+        } elseif ( 'none_selected' === $notice ) {
+            echo '<div class="notice notice-warning is-dismissible"><p>'
+                . esc_html__( 'Please select at least one record to delete.', 'btw-importer' )
+                . '</p></div>';
         }
     }
 
@@ -122,7 +231,7 @@ class btw_importer_Redirect_Log {
         // Combine query parts - ORDER BY uses validated whitelist values
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where_query and $limit_query are prepared above, $orderby_sql and $order_sql are validated against whitelist
         $query = sprintf(
-            "SELECT SQL_CALC_FOUND_ROWS p.ID, p.post_type, p.post_date, pm.meta_value as old_slug
+            "SELECT SQL_CALC_FOUND_ROWS p.ID, pm.meta_id, p.post_type, p.post_date, pm.meta_value as old_slug
             FROM {$wpdb->postmeta} pm
             JOIN {$wpdb->posts} p ON p.ID = pm.post_id
             %s
@@ -161,8 +270,9 @@ class btw_importer_Redirect_Log {
         echo '<p class="btw_importer_subtitle">' . esc_html__( 'This table shows old Blogger slugs and the new WordPress URLs that have been created as redirects.', 'btw-importer' ) . '</p>';
         echo '</div>';
 
-        $clear_nonce  = wp_create_nonce( 'btw_importer_clear_log' );
-        $search_nonce = wp_create_nonce( 'btw_importer_redirect_log_nonce' );
+        $clear_nonce   = wp_create_nonce( 'btw_importer_clear_log' );
+        $search_nonce  = wp_create_nonce( 'btw_importer_redirect_log_nonce' );
+        $delete_nonce  = wp_create_nonce( 'btw_importer_delete_records' );
 
         echo '<div class="btw_importer_upload_section">';
         echo '<div class="btw_importer_search_actions">';
@@ -191,6 +301,13 @@ class btw_importer_Redirect_Log {
             return;
         }
 
+        echo '<form method="post" class="btw_importer_delete_form" id="btw_importer_delete_form">';
+        echo '<input type="hidden" name="btw_importer_delete_nonce" value="' . esc_attr( $delete_nonce ) . '" />';
+        echo '<div class="btw_importer_delete_toolbar">';
+        echo '<button type="submit" class="button btw_importer_delete_btn"><span class="dashicons dashicons-trash"></span> ' . esc_html__( 'Delete Selected', 'btw-importer' ) . '</button>';
+        echo '<span class="btw_importer_delete_hint">' . esc_html__( 'Tick the checkboxes of the records you want to remove, then press Delete Selected.', 'btw-importer' ) . '</span>';
+        echo '</div>';
+
         $base_url = admin_url( 'admin.php?page=btw-redirect-log' );
         if ( $search ) {
             $base_url = add_query_arg( 's', urlencode( $search ), $base_url );
@@ -204,6 +321,7 @@ class btw_importer_Redirect_Log {
         echo '<div class="btw_importer_table_wrapper">';
         echo '<table class="widefat striped btw_importer_table">';
         echo '<thead class="btw_importer_table_header"><tr>';
+        echo '<th class="btw_importer_check_column"><input type="checkbox" id="btw_importer_select_all" class="btw_importer_select_all" aria-label="' . esc_attr__( 'Select all records', 'btw-importer' ) . '" /></th>';
         echo '<th>' . esc_html__( 'Old URL', 'btw-importer' ) . '</th>';
         echo '<th>' . esc_html__( 'New URL', 'btw-importer' ) . '</th>';
 
@@ -227,6 +345,7 @@ class btw_importer_Redirect_Log {
             $old_url = home_url( $row->old_slug );
             $new_url = get_permalink( $row->ID );
             echo '<tr>';
+            echo '<td class="btw_importer_check_column"><input type="checkbox" name="btw_importer_selected_records[]" value="' . esc_attr( (int) $row->meta_id ) . '" class="btw_importer_record_check" /></td>';
             echo '<td><a href="' . esc_url( $old_url ) . '" target="_blank" class="btw_importer_old_url">' . esc_html( $old_url ) . '</a></td>';
             echo '<td><a href="' . esc_url( $new_url ) . '" target="_blank" class="btw_importer_new_url">' . esc_html( $new_url ) . '</a></td>';
             echo '<td>' . esc_html( gmdate( 'Y-m-d', strtotime( $row->post_date ) ) ) . '</td>';
@@ -236,6 +355,7 @@ class btw_importer_Redirect_Log {
 
         echo '</tbody></table>';
         echo '</div>';
+        echo '</form>';
 
         $total_pages = ceil( $total_items / $per_page );
         if ( $total_pages > 1 ) {
@@ -259,6 +379,37 @@ class btw_importer_Redirect_Log {
             );
             echo '</div></div>';
         }
+
+        $none_selected  = wp_json_encode( __( 'Please select at least one record to delete.', 'btw-importer' ) );
+        $confirm_delete = wp_json_encode( __( 'Delete the selected redirect records?', 'btw-importer' ) );
+        echo '<script>
+		( function () {
+			var selectAll = document.getElementById( "btw_importer_select_all" );
+			if ( selectAll ) {
+				selectAll.addEventListener( "change", function () {
+					var boxes = document.querySelectorAll( ".btw_importer_record_check" );
+					for ( var i = 0; i < boxes.length; i++ ) {
+						boxes[ i ].checked = selectAll.checked;
+					}
+				} );
+			}
+
+			var form = document.getElementById( "btw_importer_delete_form" );
+			if ( form ) {
+				form.addEventListener( "submit", function ( event ) {
+					var boxes = document.querySelectorAll( ".btw_importer_record_check:checked" );
+					if ( ! boxes.length ) {
+						event.preventDefault();
+						window.alert( ' . $none_selected . ' );
+						return;
+					}
+					if ( ! window.confirm( ' . $confirm_delete . ' ) ) {
+						event.preventDefault();
+					}
+				} );
+			}
+		} )();
+		</script>';
 
         echo '</div>';
     }

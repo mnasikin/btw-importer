@@ -3,7 +3,7 @@ Contributors: silversh
 Tags: blogger, blogspot, blogger importer, blogspot importer, import blogspot  
 Requires at least: 6.8.0  
 Tested up to: 7.1.2  
-Stable tag: 4.3.2  
+Stable tag: 4.3.3  
 Requires PHP: 8.1  
 License: GPLv3  
 License URI: https://www.gnu.org/licenses/gpl-3.0.html  
@@ -34,7 +34,7 @@ Notice: Nginx-based server maybe slower when importing content than Apache or Li
 * Only Blogspot/Google images downloaded, others external (saving your hosting storage, especially if you use external CDN)  
 * Only download original size images (avoid duplicated)  
 * Automatically add 301 redirect from Blogspot permalink to new WordPress URL to keep your SEO (only for post with `/YYYY/MM/slug.html` format)  
-* Redirect log page to check list of redirection has been made, also option to clear redirection logs
+* Redirect log page to check list of redirection has been made, also option to delete selected redirections or clear all redirection logs
 * Optional conversion from imported Blogger HTML to WordPress block markup
 
 == Note ==
@@ -69,6 +69,11 @@ Make sure to check your content after you import contents. Also, this plugin doe
 1. Preview of the import process interface
 
 == Changelog ==
+
+= 4.3.3 =
+* Changed: Now you can delete single redirect URL instead purging all redirect url at once.
+* Fixed: Redirect loop when the old permalink and new permalink are exact match. Credit: https://www.alessandroaili.it/blog/wordpress/migrare-da-blogger-a-wordpress/
+* Improved: Aligned importer button icons with their labels.
 
 = 4.3.2 =
 * Changed: License from MIT to GPLv3.
@@ -176,5 +181,5 @@ Make sure to check your content after you import contents. Also, this plugin doe
 * Sanitized content with `wp_kses_post()`
 
 == Upgrade Notice ==
-= 4.3.1 =
+= 4.3.3 =
  Please check the changelog tab to check what's new.

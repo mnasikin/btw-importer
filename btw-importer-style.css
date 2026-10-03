@@ -619,7 +619,29 @@
     display: inline-block;
 }
 
-.btw_importer_clear_btn {
+.btw_importer_delete_form {
+    display: block;
+}
+
+.btw_importer_delete_toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: #fff;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btw_importer_delete_hint {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.btw_importer_clear_btn,
+.btw_importer_delete_btn {
     display: inline-flex !important;
     align-items: center;
     gap: 6px;
@@ -632,13 +654,15 @@
     transition: all 0.3s ease !important;
 }
 
-.btw_importer_clear_btn:hover {
+.btw_importer_clear_btn:hover,
+.btw_importer_delete_btn:hover {
     background: #b91c1c !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
 }
 
-.btw_importer_clear_btn .dashicons {
+.btw_importer_clear_btn .dashicons,
+.btw_importer_delete_btn .dashicons {
     font-size: 16px;
     width: 16px;
     height: 16px;
@@ -693,6 +717,18 @@
 
 .btw_importer_table tbody td {
     padding: 12px 20px;
+}
+
+.btw_importer_table .btw_importer_check_column {
+    width: 46px;
+    padding-left: 14px;
+    padding-right: 14px;
+    text-align: center;
+}
+
+.btw_importer_table .btw_importer_check_column input {
+    margin: 0;
+    cursor: pointer;
 }
 
 .btw_importer_sortable {
@@ -1637,6 +1673,12 @@ body.btw_importer_modal_open {
 }
 
 .btw_importer_donate_btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+    position: relative;
+    top: -10px;
     color: #fff !important;
 }
 
@@ -1645,6 +1687,21 @@ body.btw_importer_modal_open {
     min-width: 110px;
     margin: 18px auto 0 !important;
 }
+
+/* Redirect Log */
+.btw_importer_clear_btn .dashicons,
+.btw_importer_search_btn .dashicons,
+.btw_importer_delete_btn .dashicons
+ {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 1;
+    position: relative;
+    top: -10px;
+    color: #fff !important;
+}
+
 
 @media screen and (max-width: 600px) {
     .btw_importer_success_modal {
