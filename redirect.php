@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action('template_redirect', 'btw_importer_handle_old_permalink_redirect');
 
 function btw_importer_handle_old_permalink_redirect() {
+    if ( ! is_404() ) {
+        return;
+    }
     global $wp;
 
     // Get requested path with leading slash

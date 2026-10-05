@@ -27,8 +27,8 @@ class btw_importer_Importer {
     public function enqueue_scripts($hook) {
         if ($hook !== 'toplevel_page_btw-importer') return;
         wp_enqueue_script('btw-importer-lottie', plugin_dir_url(__FILE__).'assets/lottie.min.js', [], '5.12.2', true);
-        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery', 'btw-importer-lottie'], '4.3.2', true);
-        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.2');
+        wp_enqueue_script('btw-importer', plugin_dir_url(__FILE__).'btw-importer.js', ['jquery', 'btw-importer-lottie'], '4.3.3', true);
+        wp_enqueue_style('btw-importer-style', plugin_dir_url(__FILE__).'btw-importer-style.css', [], '4.3.3');
 
         wp_localize_script('btw-importer', 'btw_importer', [
             'ajaxUrl' => admin_url('admin-ajax.php'), 

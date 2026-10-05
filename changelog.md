@@ -6,6 +6,12 @@ A powerful yet simple migration tool, BtW Importer helps you seamlessly transfer
 
 
 ## Changelog
+### 4.3.3
+- Changed: Now you can delete single redirect URL instead purging all redirect url at once.
+- Fixed: Redirect loop when the old permalink and new permalink are exact match. Credit: [Alessandro Aili](https://www.alessandroaili.it/blog/wordpress/migrare-da-blogger-a-wordpress/)
+- Improved: Aligned importer button icons with their labels.
+
+
 ### 4.3.2
 - Changed: License from MIT to GPLv3.
 - Compatibility: Checked with WordPress 7.1.2.
